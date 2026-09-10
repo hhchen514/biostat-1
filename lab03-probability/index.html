@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陽性，然後呢｜生物統計學(一)</title>
+<meta name="description" content="生物統計學(一) 第 11–15 週互動教材：雙向表機率、篩檢的陷阱、二項分配探索器、常態分配計算機與中央極限定理模擬器。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow"><span class="tick"></span>生物統計學(一)　單元四　第 11–15 週　｜　<a href="../" style="color:var(--accent);text-decoration:none">← 課程主目錄</a></p>
+  <h1>陽性，然後呢</h1>
+  <p class="lede">
+    一個敏感度 90% 的快篩，驗出陽性——這尾魚真的有病嗎？
+    大部分人會說「九成吧」。正確答案是 <strong>48.6%</strong>，連一半都不到。
+    這一頁用滑桿讓你看著這個數字怎麼隨盛行率崩塌，最後再用一千次抽樣，
+    親眼看歪掉的母體怎麼變成鐘形。
+  </p>
+  <div class="chips">
+    <span class="chip">W11 機率與加法規則</span>
+    <span class="chip">W12 條件機率</span>
+    <span class="chip">W13 二項分配</span>
+    <span class="chip">W14 常態分配</span>
+    <span class="chip">W15 中央極限定理</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#s1">01　雙向表機率</a></li>
+    <li><a href="#s2">02　篩檢的陷阱</a></li>
+    <li><a href="#s3">03　二項分配</a></li>
+    <li><a href="#s4">04　常態分配</a></li>
+    <li><a href="#s5">05　中央極限定理 ★</a></li>
+    <li><a href="#s6">06　無限練習題</a></li>
+    <li><a href="#s7">07　速記卡</a></li>
+  </ul>
+</nav>
+
+<div class="rail">
+
+<!-- ══════════ 01 ══════════ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span>
+    <h2>雙向表：本週所有計算的基礎</h2>
+  </div>
+  <p class="sub">
+    機率題九成的難處不在公式，而在<strong>沒把表畫出來</strong>。
+    只要四格填滿，邊際、聯合、條件機率全都是「用數的」。改下面的數字試試看。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 01</span>
+      <span class="name">雙向表機率計算機</span>
+      <span class="hint">改動任何一格，所有機率即時重算</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:12px">
+          <button data-tw="gear" class="on">漁法 × 漁獲類型</button>
+          <button data-tw="pond">池別 × 寄生蟲</button>
+          <button data-tw="indep">獨立的例子</button>
+        </div>
+
+        <div class="twoway">
+          <table>
+            <thead><tr><th></th><th id="tw-c1">目標種為主</th><th id="tw-c2">混獲為主</th><th class="tot">合計</th></tr></thead>
+            <tbody>
+              <tr><th id="tw-r1">拖網</th>
+                  <td><input type="number" id="tw-a" min="0" step="1"></td>
+                  <td><input type="number" id="tw-b" min="0" step="1"></td>
+                  <td class="tot" id="tw-r1t">—</td></tr>
+              <tr><th id="tw-r2">刺網</th>
+                  <td><input type="number" id="tw-c" min="0" step="1"></td>
+                  <td><input type="number" id="tw-d" min="0" step="1"></td>
+                  <td class="tot" id="tw-r2t">—</td></tr>
+              <tr><th class="tot">合計</th>
+                  <td class="tot" id="tw-c1t">—</td>
+                  <td class="tot" id="tw-c2t">—</td>
+                  <td class="tot" id="tw-n">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="plist" id="tw-out"></div>
+        <p class="sub" id="tw-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div>
+      <h5>互斥 Mutually Exclusive</h5>
+      <ul>
+        <li><b>不可能</b>同時發生，P(A ∩ B) = 0</li>
+        <li>加法規則簡化為 P(A) + P(B)</li>
+        <li>例：同一網次是「拖網」或「刺網」</li>
+      </ul>
+    </div>
+    <div>
+      <h5>獨立 Independent</h5>
+      <ul>
+        <li>一個發生<b>不影響</b>另一個的機率</li>
+        <li>判準：P(A|B) = P(A)</li>
+        <li>例：兩次不同網次的漁獲結果</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">互斥 ≠ 獨立</span>
+    <p>這是本單元最常搞混的一組。<br>
+    互斥講的是「<strong>不能同時發生</strong>」；獨立講的是「<strong>互不影響</strong>」。<br>
+    而且——<em>兩個機率都不為零的互斥事件，一定不獨立</em>。
+    因為 A 一發生，B 就絕不可能發生，這是最強的相依。</p>
+  </div>
+</section>
+
+<!-- ══════════ 02 ══════════ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span>
+    <h2>篩檢的陷阱</h2>
+  </div>
+  <p class="sub">
+    敏感度是「<strong>有病驗得出來</strong>」的比例；陽性預測值是「<strong>驗出陽性真的有病</strong>」的比例。
+    兩者條件方向相反，卻經常被當成同一件事——這是條件機率最經典的誤用。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 02</span>
+      <span class="name">拉動盛行率，看 PPV 崩塌</span>
+      <span class="hint">每個點代表 1 尾魚，共 1000 尾</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>盛行率 Prevalence<b id="v-prev">5.0%</b></label>
+            <input type="range" id="in-prev" min="0.5" max="50" step="0.5" value="5">
+          </div>
+          <div class="ctrl">
+            <label>敏感度 Sensitivity<b id="v-sens">90%</b></label>
+            <input type="range" id="in-sens" min="50" max="100" step="1" value="90">
+          </div>
+          <div class="ctrl">
+            <label>特異度 Specificity<b id="v-spec">95%</b></label>
+            <input type="range" id="in-spec" min="50" max="100" step="1" value="95">
+          </div>
+        </div>
+
+        <div class="dotgrid" id="dotgrid"></div>
+        <div class="dg-legend">
+          <span><i class="dg-tp"></i>真陽性 TP（有病，驗出陽性）</span>
+          <span><i class="dg-fp"></i>偽陽性 FP（沒病，卻驗出陽性）</span>
+          <span><i class="dg-fn"></i>偽陰性 FN（有病，卻驗成陰性）</span>
+          <span><i class="dg-tn"></i>真陰性 TN（沒病，驗成陰性）</span>
+        </div>
+
+        <div class="fourbox" id="fourbox"></div>
+        <div class="plist" id="scr-out"></div>
+        <p class="sub" id="scr-note" style="margin:6px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">把盛行率拉到 1% 看看</span>
+    <p>
+      即使敏感度與特異度都維持在 90%／95%，
+      <strong>陽性預測值會掉到 16% 左右</strong>——驗出陽性的個體裡，有八成其實是健康的。<br>
+      原因很單純：<em>健康的實在太多了</em>。就算誤判率只有 5%，
+      乘上龐大的健康族群，產生的偽陽性也會蓋過真陽性。
+    </p>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">實務對策</span>
+    <p>對低盛行率的疾病做<strong>全面普篩</strong>，會製造大量偽陽性，造成不必要的撲殺與損失。<br>
+    正確做法是<strong>先用流行病學資訊縮小範圍</strong>（只篩高風險池區），
+    把受檢族群的盛行率提高，PPV 才會跟著上升；陽性個體也必須用更精確的第二階段檢驗複驗。</p>
+  </div>
+</section>
+
+<!-- ══════════ 03 ══════════ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span>
+    <h2>二項分配探索器</h2>
+  </div>
+  <p class="sub">
+    成功或失敗、存活或死亡、雌性或雄性——生物研究裡最常出現的就是這種「只有兩種結果」的情境。
+    拉動 n 與 p，看整個分配的形狀怎麼變。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 03</span>
+      <span class="name">n 與 p 怎麼決定形狀</span>
+      <span class="hint">把 p 拉到 0.5 看看會發生什麼</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>試驗次數 n<b id="v-n">20</b></label>
+            <input type="range" id="in-n" min="5" max="60" step="1" value="20">
+          </div>
+          <div class="ctrl">
+            <label>成功機率 p<b id="v-p">0.15</b></label>
+            <input type="range" id="in-p" min="0.05" max="0.95" step="0.05" value="0.15">
+          </div>
+          <div class="ctrl">
+            <label>標示 x =<b id="v-x">3</b></label>
+            <input type="range" id="in-x" min="0" max="20" step="1" value="3">
+          </div>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="binchart" viewBox="0 0 660 250" role="img" aria-label="二項分配"></svg></div>
+
+        <div class="plist" id="bin-out"></div>
+        <div class="binom-tbl" id="bin-tbl"></div>
+        <p class="sub" id="bin-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <h3>二項實驗的四項條件</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>#</th><th>條件</th><th>英文</th><th>標識放流的對應</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>固定的試驗次數 n</td><td>Fixed number of trials</td><td>放流 20 尾，n = 20</td></tr>
+        <tr><td class="num">2</td><td>每次只有兩種結果</td><td>Two outcomes</td><td>回收 / 未回收</td></tr>
+        <tr><td class="num">3</td><td>每次成功機率 p <em>相同</em></td><td>Constant probability</td><td>每尾回收率都是 0.15</td></tr>
+        <tr><td class="num">4</td><td>各次試驗<em>互相獨立</em></td><td>Independent trials</td><td>一尾被回收不影響其他尾</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="lbl">第 3、4 條最容易被違反</span>
+    <p>例如「<strong>不放回抽樣</strong>」就違反第 3 條——抽走一個之後機率就變了，這時要改用<strong>超幾何分配</strong>。</p>
+  </div>
+</section>
+
+<!-- ══════════ 04 ══════════ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span>
+    <h2>常態分配計算機</h2>
+  </div>
+  <p class="sub">
+    第 8 週的經驗法則（68-95-99.7）其實就是常態分配的三個特例。
+    這台機器讓你算<strong>任何</strong>區間——而且會把面積塗給你看。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 04</span>
+      <span class="name">面積就是機率</span>
+      <span class="hint">正向與反向都能練</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>平均數 μ<b id="v-mu">250</b></label>
+            <input type="range" id="in-mu" min="100" max="400" step="5" value="250">
+          </div>
+          <div class="ctrl">
+            <label>標準差 σ<b id="v-sg">30</b></label>
+            <input type="range" id="in-sg" min="5" max="80" step="1" value="30">
+          </div>
+          <div class="btns">
+            <button data-nm="lt" class="on">P(X &lt; a)</button>
+            <button data-nm="gt">P(X &gt; a)</button>
+            <button data-nm="bt">P(a &lt; X &lt; b)</button>
+          </div>
+        </div>
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>切點 a<b id="v-a">280</b></label>
+            <input type="range" id="in-a" min="100" max="400" step="1" value="280">
+          </div>
+          <div class="ctrl" id="wrap-b">
+            <label>切點 b<b id="v-b">310</b></label>
+            <input type="range" id="in-b" min="100" max="400" step="1" value="310">
+          </div>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="normchart" viewBox="0 0 660 230" role="img" aria-label="常態分配曲線"></svg></div>
+
+        <div class="plist" id="nm-out"></div>
+        <p class="sub" id="nm-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>正向題</th><th>反向題</th></tr></thead>
+      <tbody>
+        <tr><td>題目給你</td><td>一個<em>數值 x</em></td><td>一個<em>機率或百分比</em></td></tr>
+        <tr><td>要你求</td><td>機率</td><td>數值 x（臨界值）</td></tr>
+        <tr><td>步驟</td><td class="num">x → z → 查表 → 機率</td><td class="num">機率 → 反查表 → z → x</td></tr>
+        <tr><td>公式</td><td class="num">z = (x − μ) / σ</td><td class="num">x = μ + z·σ</td></tr>
+        <tr><td>典型問法</td><td>超過 280 g 的比例是多少</td><td>最重的 10% 門檻在哪</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="lbl">三個必背的臨界值</span>
+    <p><strong>z = 1.28</strong>（尾端 10%）　<strong>z = 1.645</strong>（尾端 5%）　<strong>z = 1.96</strong>（尾端 2.5%）<br>
+    後兩個下學期會天天用到——1.645 用於單尾檢定，1.96 用於 95% 信賴區間。</p>
+  </div>
+</section>
+
+<!-- ══════════ 05 ══════════ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span>
+    <h2>中央極限定理模擬器　★</h2>
+  </div>
+  <p class="sub">
+    這是全學期最值得動手玩的一個模擬。
+    挑一個<strong>歪七扭八的母體</strong>，設定樣本數，按下按鈕抽一千次——
+    然後看著樣本平均數的直方圖，自己變成鐘形。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 05</span>
+      <span class="name">母體再怎麼歪，x̄ 還是會變鐘形</span>
+      <span class="hint">先選母體，再選 n，然後按「抽 1000 次」</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="btns">
+            <button data-pop="skew" class="on">右偏母體</button>
+            <button data-pop="bimodal">雙峰母體</button>
+            <button data-pop="uniform">均勻母體</button>
+            <button data-pop="normal">常態母體</button>
+          </div>
+          <div class="ctrl">
+            <label>每次抽幾個 n<b id="v-cn">2</b></label>
+            <input type="range" id="in-cn" min="1" max="50" step="1" value="2">
+          </div>
+          <div class="btns">
+            <button class="primary" id="clt-run">▶ 抽 1000 次</button>
+            <button class="ghost" id="clt-clear">清空</button>
+          </div>
+        </div>
+
+        <div class="clt-grid">
+          <div class="clt-panel">
+            <h5>母體分配</h5>
+            <p class="sub2">個別個體長什麼樣子——這是「歪的」那一個</p>
+            <div class="chart-wrap"><svg class="chart" id="popchart" viewBox="0 0 400 200" style="min-width:280px" role="img" aria-label="母體分配"></svg></div>
+          </div>
+          <div class="clt-panel">
+            <h5>x̄ 的抽樣分配</h5>
+            <p class="sub2">每次抽 n 個算平均，把那些平均數畫成直方圖</p>
+            <div class="chart-wrap"><svg class="chart" id="xbchart" viewBox="0 0 400 200" style="min-width:280px" role="img" aria-label="樣本平均數的抽樣分配"></svg></div>
+          </div>
+        </div>
+
+        <p class="clt-run" id="clt-status">尚未開始。先按「抽 1000 次」。</p>
+        <div class="plist" id="clt-out"></div>
+        <p class="sub" id="clt-note" style="margin:6px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">試試這個順序</span>
+    <p>
+      ① 選<strong>右偏母體</strong>，n 設為 <strong>1</strong>，抽 1000 次——右邊的圖跟左邊一樣歪。<br>
+      ② 把 n 改成 <strong>5</strong>，再抽——已經開始對稱了。<br>
+      ③ 改成 <strong>30</strong>，再抽——<em>幾乎是完美的鐘形</em>，而且窄了很多。<br>
+      ④ 換<strong>雙峰母體</strong>重做一次。中間明明是凹的，x̄ 卻還是變成單峰鐘形。
+    </p>
+  </div>
+
+  <h3>中央極限定理</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>#</th><th>定理內容</th><th>意思</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="num">x̄ 的平均數 = μ</td><td>x̄ 不會系統性偏高或偏低（不偏）</td></tr>
+        <tr><td class="num">2</td><td class="num">x̄ 的標準差 = σ / √n</td><td>樣本越大，x̄ 越集中——這叫<em>標準誤</em></td></tr>
+        <tr><td class="num">3</td><td class="num">n 夠大時 x̄ 趨近常態</td><td><em>不管母體長什麼樣</em>　★ 最神奇的一條</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">本週最常見的失分點</span>
+    <p>問「<strong>一尾魚</strong>」用 <strong>σ</strong>；問「<strong>n 尾的平均</strong>」用 <strong>σ/√n</strong>。<br>
+    <em>看到「平均」兩個字就要換分母。</em></p>
+  </div>
+
+  <div class="note">
+    <span class="lbl">本學期的終點，下學期的起點</span>
+    <p>
+      既然 x̄ ~ N(μ, σ²/n)，那麼有 95% 的機會 x̄ 落在 μ ± 1.96 個標準誤之內。<br>
+      把它反過來寫：有 95% 的機會，<strong>μ 落在 x̄ ± 1.96 個標準誤之內</strong>。<br>
+      這就是「95% 信賴區間」——下學期第 1 週的第一個公式。
+    </p>
+  </div>
+</section>
+
+<!-- ══════════ 06 ══════════ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span>
+    <h2>無限練習題</h2>
+  </div>
+  <p class="sub">每按一次「換一題」就是一組新數字。先自己算完，再對答案。</p>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 01</span><span class="name">雙向表與加法規則</span><span class="hint">邊際・聯合・條件</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g1-q"></p>
+      <div class="btns"><button class="primary" data-gen="1">↻ 換一題</button><button data-sol="1">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g1-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 02</span><span class="name">篩檢四格表</span><span class="hint">建表求 PPV 與 NPV</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g2-q"></p>
+      <div class="btns"><button class="primary" data-gen="2">↻ 換一題</button><button data-sol="2">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g2-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 03</span><span class="name">二項機率</span><span class="hint">含組合數展開</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g3-q"></p>
+      <div class="btns"><button class="primary" data-gen="3">↻ 換一題</button><button data-sol="3">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g3-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 04</span><span class="name">常態分配</span><span class="hint">正向與反向隨機出題</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g4-q"></p>
+      <div class="btns"><button class="primary" data-gen="4">↻ 換一題</button><button data-sol="4">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g4-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 05</span><span class="name">中央極限定理</span><span class="hint">標準誤與 x̄ 的機率</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g5-q"></p>
+      <div class="btns"><button class="primary" data-gen="5">↻ 換一題</button><button data-sol="5">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g5-s"></div>
+      <p class="gen-tip">※ 這台機器會隨機問「一尾」或「n 尾的平均」——分母該用 σ 還是 σ/√n，每次都要先確認。</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════ 07 ══════════ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span>
+    <h2>速記卡</h2>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>項目</th><th>公式</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>餘事件</td><td class="num">P(E') = 1 − P(E)</td><td>「至少一次」改算「一次都沒有」</td></tr>
+        <tr><td>加法規則</td><td class="num">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</td><td>互斥時第三項為 0</td></tr>
+        <tr><td>條件機率</td><td class="num">P(A|B) = P(A ∩ B) / P(B)</td><td>分母＝縮小後的樣本空間</td></tr>
+        <tr><td>乘法規則</td><td class="num">P(A ∩ B) = P(A) × P(B|A)</td><td></td></tr>
+        <tr><td>獨立的判準</td><td class="num">P(A|B) = P(A)</td><td>不相等就是不獨立</td></tr>
+        <tr><td>排列</td><td class="num">nPr = n! / (n−r)!</td><td>順序<em>有</em>差</td></tr>
+        <tr><td>組合</td><td class="num">nCr = n! / [r!(n−r)!]</td><td>順序<em>無</em>差</td></tr>
+        <tr><td>期望值</td><td class="num">μ = Σ[X · P(X)]</td><td>長期平均，非單次預測</td></tr>
+        <tr><td>離散變異數</td><td class="num">σ² = Σ[X² · P(X)] − μ²</td><td></td></tr>
+        <tr><td>二項機率</td><td class="num">P(X=x) = nCx · p^x · q^(n−x)</td><td>四項條件要先檢查</td></tr>
+        <tr><td>二項的 μ、σ</td><td class="num">μ = np　σ = √(npq)</td><td></td></tr>
+        <tr><td>標準化</td><td class="num">z = (x − μ) / σ</td><td>問「一尾」用這個</td></tr>
+        <tr><td>反標準化</td><td class="num">x = μ + z·σ</td><td>反向題用這個</td></tr>
+        <tr><td><em>標準誤</em></td><td class="num">SE = σ / √n</td><td>問「n 尾的平均」用這個</td></tr>
+        <tr><td><em>x̄ 的標準化</em></td><td class="num">z = (x̄ − μ) / (σ/√n)</td><td>★ 最常錯的地方</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">五個最容易錯的地方</span>
+    <p>
+      ① <strong>互斥 ≠ 獨立</strong>——互斥是不能同時發生，獨立是互不影響<br>
+      ② <strong>敏感度 ≠ 陽性預測值</strong>——條件方向相反<br>
+      ③ 二項的<strong>四項條件</strong>要逐一檢查，特別是「p 是否相同」<br>
+      ④ <strong>正向題與反向題</strong>方向要分清楚<br>
+      ⑤ 問「平均」卻用 σ 當分母——<em>必須用 σ/√n</em>
+    </p>
+  </div>
+</section>
+
+</div><!-- /rail -->
+
+<footer>
+  <p>生物統計學(一)　單元四　互動教材　｜　對應 Bluman《統計學 10/e》第 4–6 章</p>
+  <p>配套講義：<code>講義/生統一/W11-W15_機率與機率分配.md</code>　｜　<a href="../" style="color:var(--accent)">回到課程主目錄</a></p>
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

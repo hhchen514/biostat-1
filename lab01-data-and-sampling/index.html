@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四十尾魚的統計課｜生物統計學(一)</title>
+<meta name="description" content="生物統計學(一) 第 1–6 週互動教材：課程地圖、抽樣模擬器、次數分配表建構器、圖表誤導示範與練習機。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow"><span class="tick"></span>生物統計學(一)　單元一・二　第 1–6 週</p>
+  <h1>四十尾魚的統計課</h1>
+  <p class="lede">
+    池子裡有 12,000 尾魚。老闆問你：「現在平均多大？可以出貨了嗎？」
+    你不可能全部量一遍——你只能撈 40 尾。這一頁要回答的是：那 40 尾要怎麼撈才算公平，
+    以及撈上來的 40 個數字，要怎麼整理才看得懂。
+  </p>
+  <div class="chips">
+    <span class="chip">W1 統計學是什麼</span>
+    <span class="chip">W2 資料類型與抽樣</span>
+    <span class="chip off">W3 研究設計（放假）</span>
+    <span class="chip">W4 次數分配表</span>
+    <span class="chip off">W5 統計圖（放假）</span>
+    <span class="chip">W6 圖表誤用</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#s1">01　課程地圖・描述與推論</a></li>
+    <li><a href="#s2">02　測量尺度</a></li>
+    <li><a href="#s3">03　抽樣模擬</a></li>
+    <li><a href="#s4">04　建表七步驟</a></li>
+    <li><a href="#s5">05　三種統計圖</a></li>
+    <li><a href="#s6">06　圖表的謊言</a></li>
+    <li><a href="#s7">07　無限練習題</a></li>
+    <li><a href="#s8">08　速記卡</a></li>
+  </ul>
+</nav>
+
+<div class="rail">
+
+<!-- ══════════ SECTION 1 ══════════ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span>
+    <h2>先看整學期怎麼走</h2>
+  </div>
+
+  <div class="slide-block">
+  <p class="sub">
+    第一堂課的開場投影片。18 週一次攤開，讓同學知道<strong>什麼時候放假、什麼時候考試、
+    每一週在整條學習路徑上的位置</strong>——統計是高度累積的科目，看得到全貌才知道哪一週不能缺席。
+  </p>
+
+  <div class="slide-frame" id="slide-frame">
+    <div class="slide-stage" id="slide-stage">
+      <div class="sl-head">
+        <h3>生物統計學(一)　課程地圖</h3>
+        <span class="sl-sub">115 學年度第 1 學期</span>
+        <span class="sl-meta">
+          2 學分・每週 2 節・共 18 週<br>
+          教科書：Bluman《統計學 10/e》第 1–6 章
+        </span>
+      </div>
+
+      <div class="sl-cols" id="sl-cols"></div>
+
+      <div class="sl-foot">
+        <span class="sl-legend">
+          <span><i style="background:var(--u1)"></i>單元一 統計學的本質</span>
+          <span><i style="background:var(--u2)"></i>單元二 整理與呈現</span>
+          <span><i style="background:var(--u3)"></i>單元三 資料的描述</span>
+          <span><i style="background:var(--u4)"></i>單元四 機率與分配</span>
+          <span><i style="background:var(--flag)"></i>評量</span>
+        </span>
+        <span class="k">授課 12 週｜放假 4 週（內容併入鄰近週次）｜考試 2 週</span>
+        <span>評分：平時 <b>30%</b>　期中考 <b>30%</b>　期末考 <b>40%</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-tools">
+    <button class="primary" id="slide-zoom">⛶ 放大播放</button>
+    <button id="slide-print">列印／存成 PDF</button>
+    <span class="esc">放大後按 Esc 或再點一次即可離開</span>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">放假週怎麼辦？</span>
+    <p>第 <strong>3、5、16、17 週</strong>放假，但這四週的內容<strong>不會消失</strong>——
+    會併入前後週講授，並在課程網站提供線上教材與練習題。
+    核心章節（第 1–6 章，含中央極限定理）全部安排在第 1–15 週完成，
+    所以放假<strong>不會影響觀念的連貫性</strong>，但你必須跟上被壓縮的進度。</p>
+  </div>
+
+  <div class="note">
+    <span class="lbl">為什麼第 15 週有顆星？</span>
+    <p><strong>抽樣分配與中央極限定理</strong>是本學期的終點，也是下學期
+    生物統計學(二)的起點——所有的信賴區間與假設檢定都建立在它上面。
+    這一週聽不懂，下學期會整學期都很辛苦。</p>
+  </div>
+  </div>
+
+  <h3>本週正題：描述統計 vs 推論統計</h3>
+  <p class="sub">整個生物統計學的分水嶺，就在一句話有沒有「跳出手上的資料」。</p>
+
+  <div class="cmp">
+    <div>
+      <h5>描述統計</h5>
+      <ul>
+        <li>整理<b>你手上已經有的</b>資料</li>
+        <li>不猜手上沒有的東西</li>
+        <li>結論百分之百正確</li>
+        <li>本學期第 4–10 週在做這件事</li>
+      </ul>
+    </div>
+    <div>
+      <h5>推論統計</h5>
+      <ul>
+        <li>用<b>一小部分</b>推測<b>沒看到的全體</b></li>
+        <li>一定會猜，所以一定要談「猜錯的機率」</li>
+        <li>結論帶著不確定性</li>
+        <li>本學期第 11–15 週鋪路，下學期正式開始</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">判斷訣竅</span>
+    <p>看那句話講的<strong>對象</strong>，有沒有超出你<strong>實際量到</strong>的範圍。<br>
+    有超出 → 推論統計；沒超出 → 描述統計。</p>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習 01</span>
+      <span class="name">描述還是推論？</span>
+      <span class="hint">點選你的答案，立刻看理由</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div id="q1-box"></div>
+        <div class="score">
+          <span>作答進度：<b id="q1-score">0</b> / 6　答對 <b id="q1-right">0</b> 題</span>
+          <button class="ghost" id="q1-reset">重做</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>四個必須分清楚的名詞</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>名詞</th><th>意思</th><th>養殖池的對應</th><th>符號</th></tr></thead>
+      <tbody>
+        <tr><td><strong>母體</strong> Population</td><td>你真正想知道的全部對象</td><td>池中全部 12,000 尾</td><td class="num">N</td></tr>
+        <tr><td><strong>樣本</strong> Sample</td><td>你實際量到的那一部分</td><td>撈起來的 40 尾</td><td class="num">n</td></tr>
+        <tr><td><strong>參數</strong> Parameter</td><td>描述母體的數值（<em>固定但未知</em>）</td><td>12,000 尾的真實平均</td><td class="num">μ, σ, p</td></tr>
+        <tr><td><strong>統計量</strong> Statistic</td><td>描述樣本的數值（<em>已知但會變</em>）</td><td>40 尾算出的 17.5 cm</td><td class="num">x̄, s, p̂</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="lbl">記憶法</span>
+    <p><strong>P</strong>opulation → <strong>P</strong>arameter（都是 P）　｜　<strong>S</strong>ample → <strong>S</strong>tatistic（都是 S）</p>
+  </div>
+</section>
+
+<!-- ══════════ SECTION 2 ══════════ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span>
+    <h2>四種測量尺度</h2>
+  </div>
+  <p class="sub">
+    這不是為了考試而分類。<strong>測量尺度決定你能用哪些統計方法</strong>——
+    期末最後一題「這組資料該用什麼方法分析」，第一步就是判斷尺度。
+  </p>
+
+  <div class="ladder">
+    <div class="rung">
+      <div class="rung-name">比率<small>RATIO</small></div>
+      <div class="rung-txt"><b>什麼都能做。</b>有絕對零點，0 就代表「真的沒有」，可以講倍數。<br>體長、體重、尾數、溶氧量　→　<em>20 cm 是 10 cm 的兩倍長 ✓</em></div>
+    </div>
+    <div class="rung">
+      <div class="rung-name">區間<small>INTERVAL</small></div>
+      <div class="rung-txt"><b>可以相減，不能相除。</b>間距有意義，但 0 是人為訂的。<br>攝氏溫度、西元年份、pH　→　<em>20°C 是 10°C 的兩倍熱 ✗</em></div>
+    </div>
+    <div class="rung">
+      <div class="rung-name">順序<small>ORDINAL</small></div>
+      <div class="rung-txt"><b>可以排序，間距不明。</b>知道誰大誰小，但差多少說不清。<br>成熟度 I–V 期、鮮度 A/B/C　→　<em>III − II ≠ V − IV</em></div>
+    </div>
+    <div class="rung">
+      <div class="rung-name">名目<small>NOMINAL</small></div>
+      <div class="rung-txt"><b>只能分類。</b>類別之間沒有大小順序。<br>魚種、漁法、產地、標籤編號　→　<em>「平均魚種」沒有意義</em></div>
+    </div>
+  </div>
+
+  <h3>判斷流程（考試時照著跑）</h3>
+  <div class="eq">Q1　是數字，而且加減乘除有意義嗎？　→ 否 ─┐</div>
+  <div class="eq">　　　　　　　　　　　　　　　　　　　　　└→ Q2　類別有大小順序嗎？　否 → <b>名目</b>　／　是 → <b>順序</b></div>
+  <div class="eq">　　　　　　　　　　　　　　　　　　→ 是 ─→ Q3　「0」代表完全沒有嗎？　否 → <b>區間</b>　／　是 → <b>比率</b></div>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習 02</span>
+      <span class="name">尺度判斷器</span>
+      <span class="hint">10 題漁業變數，每題四選一</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div id="q2-box"></div>
+        <div class="score">
+          <span>作答進度：<b id="q2-score">0</b> / 10　答對 <b id="q2-right">0</b> 題</span>
+          <button class="ghost" id="q2-reset">重做</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">最常錯的兩題</span>
+    <p><strong>漁船編號</strong>是名目——有數字不代表是量性資料，問問自己「這個數字拿去做加減乘除有意義嗎」。<br>
+    <strong>pH 值</strong>是區間——pH 是氫離子濃度取負對數，pH 相差 1 代表濃度差 10 倍，絕對不能講倍數。</p>
+  </div>
+</section>
+
+<!-- ══════════ SECTION 3 ══════════ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span>
+    <h2>五種抽樣方法，五種命運</h2>
+  </div>
+  <p class="sub">
+    下面是一個養殖場，<strong>10 個池、每池 20 尾，共 200 尾</strong>。
+    各池放養時間不同，所以池與池之間體長差很多——這正是真實養殖場的樣子。
+    現在你要抽 <strong>20 尾</strong> 來推估全場平均。用不同方法抽，會發生什麼事？
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">模擬 01</span>
+      <span class="name">抽樣方法模擬器</span>
+      <span class="hint">選一種方法，看它抽到誰</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:16px">
+          <button data-m="srs" class="on">簡單隨機</button>
+          <button data-m="sys">系統</button>
+          <button data-m="str">分層</button>
+          <button data-m="clu">群集</button>
+          <button data-m="con">方便</button>
+          <button class="primary" id="resample">↻ 再抽一次</button>
+        </div>
+
+        <p id="method-desc" class="sub" style="margin-bottom:14px;min-height:44px"></p>
+
+        <div class="ponds" id="ponds"></div>
+        <div class="legend">
+          <span><i style="background:var(--rule)"></i>未抽中</span>
+          <span><i style="background:var(--flag)"></i>抽中（樣本）</span>
+          <span>色塊由上到下＝第 1 池到第 10 池，左右為池內個體</span>
+        </div>
+
+        <div class="readout">
+          <div class="ro"><span class="k">母體真值 μ</span><span class="v acc" id="ro-mu">—</span> <span class="u">cm</span></div>
+          <div class="ro"><span class="k">樣本平均 x̄</span><span class="v" id="ro-xbar">—</span> <span class="u">cm</span></div>
+          <div class="ro"><span class="k">誤差 x̄ − μ</span><span class="v flag" id="ro-err">—</span> <span class="u">cm</span></div>
+          <div class="ro"><span class="k">樣本數 n</span><span class="v" id="ro-n">20</span></div>
+        </div>
+      </div>
+
+      <div class="lab-inner" style="margin-top:18px">
+        <h4 style="margin-top:0">重複抽樣 200 次，看誤差的分布</h4>
+        <p class="sub" style="margin-bottom:12px">
+          抽一次看不出好壞——運氣好誰都會準。真正的差別要重複很多次才看得出來。
+          藍線是母體真值 μ，每個橘點是一次抽樣得到的 x̄。
+          <strong>點越集中在藍線上，這個方法越可靠。</strong>
+        </p>
+        <button class="primary" id="run-many">▶ 執行 200 次抽樣</button>
+        <div class="strip" id="strip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">你應該看到什麼</span>
+    <p>
+      <strong>分層抽樣</strong>的點最集中——因為它強迫每一池都被抽到，池間差異被「鎖住」了。<br>
+      <strong>群集抽樣</strong>的點散得最開——抽中哪一池，結果就完全被那一池綁架。<br>
+      <strong>方便抽樣</strong>的點<em>整團偏在一側</em>，而且再怎麼重複都不會回到藍線上。
+      而且它的<strong>散布是 0.00</strong>——每次抽都得到一模一樣的答案，看起來「非常穩定」，
+      但穩定地錯了 5.5 cm。這叫<strong>系統性偏誤（bias）</strong>，是抽樣裡最嚴重的問題：
+      <em>增加樣本數、重複再多次，都救不回來。</em>
+    </p>
+  </div>
+
+  <h3>分層 vs 群集：必考的對比</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>分層抽樣 Stratified</th><th>群集抽樣 Cluster</th></tr></thead>
+      <tbody>
+        <tr><td><strong>分組原則</strong></td><td>層內<em>相似</em>、層間<em>相異</em></td><td>群內<em>多樣</em>、群間<em>相似</em></td></tr>
+        <tr><td><strong>抽誰</strong></td><td>每一層都抽，各抽一部分</td><td>只抽部分群集，<em>抽中的全要</em></td></tr>
+        <tr><td><strong>目的</strong></td><td>提高精確度</td><td>降低成本</td></tr>
+        <tr><td><strong>漁業例子</strong></td><td>依漁法分層，各漁法都抽幾艘</td><td>以魚箱為群集，抽 10 箱整箱全量</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>系統抽樣的計算</h3>
+  <div class="steps">
+    <div class="step"><div class="step-n">STEP 1</div><div class="step-b">
+      <h5>計算抽樣間隔 k</h5>
+      <div class="eq">k = N / n = 1200 / 60 = <b>20</b></div>
+    </div></div>
+    <div class="step"><div class="step-n">STEP 2</div><div class="step-b">
+      <h5>在 1 到 k 之間隨機選起點 r</h5>
+      <p>假設抽到 r = <strong>7</strong>。</p>
+    </div></div>
+    <div class="step"><div class="step-n">STEP 3</div><div class="step-b">
+      <h5>列出應抽的箱號</h5>
+      <div class="eq">7, 27, 47, 67, 87, …　　一般式：第 i 箱 = 7 + (i − 1) × 20</div>
+    </div></div>
+    <div class="step"><div class="step-n">STEP 4</div><div class="step-b">
+      <h5>驗算最後一箱有沒有超出範圍</h5>
+      <div class="eq">第 60 箱 = 7 + 59 × 20 = <b>1187</b> ≤ 1200 ✓　方案可行</div>
+    </div></div>
+  </div>
+
+  <h3>分層抽樣的比例配置</h3>
+  <p>某漁港 500 艘船：拖網 200、刺網 150、延繩釣 100、其他 50。要抽 50 艘。</p>
+  <div class="eq">抽出率 = n / N = 50 / 500 = <b>0.10</b>　→　各層樣本數 = 各層船數 × 0.10</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>層別</th><th class="num">母體 N<sub>h</sub></th><th>計算</th><th class="num">樣本 n<sub>h</sub></th></tr></thead>
+      <tbody>
+        <tr><td>拖網</td><td class="num">200</td><td>200 × 0.10</td><td class="num">20</td></tr>
+        <tr><td>刺網</td><td class="num">150</td><td>150 × 0.10</td><td class="num">15</td></tr>
+        <tr><td>延繩釣</td><td class="num">100</td><td>100 × 0.10</td><td class="num">10</td></tr>
+        <tr><td>其他</td><td class="num">50</td><td>50 × 0.10</td><td class="num">5</td></tr>
+        <tr class="total"><td>合計</td><td class="num">500</td><td></td><td class="num">50 ✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════ SECTION 4 ══════════ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span>
+    <h2>建表七步驟：手把手</h2>
+  </div>
+  <p class="sub">
+    這是本單元唯一需要「動手照做」的技能。下面是那 40 尾吳郭魚的體長（cm）。
+    盯著它看三分鐘，你說不出這批魚大概多大——<strong>40 個散亂的數字，人腦處理不了。</strong>
+  </p>
+
+  <pre class="stem">16.4  18.2  14.7  20.1  15.3  17.8  13.2  19.6  16.4  21.4
+15.8  18.7  12.5  17.1  20.8  14.1  19.2  16.2  22.3  15.0
+17.5  13.8  18.9  16.7  20.4  11.2  19.8  15.6  17.3  21.9
+14.4  18.4  16.0  23.6  17.9  13.5  19.0  24.8  16.4  18.1</pre>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">手把手</span>
+      <span class="name">七步驟逐步展開</span>
+      <span class="hint">按「下一步」，一次只看一步</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:18px">
+          <button class="primary" id="st-next">下一步 ▶</button>
+          <button class="ghost" id="st-prev">◀ 上一步</button>
+          <button class="ghost" id="st-all">全部展開</button>
+          <button class="ghost" id="st-reset">重來</button>
+        </div>
+        <div class="steps" id="steps7"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">組距為什麼一定要「無條件進位」？</span>
+    <p>若 R = 13.6、k = 7，算出 w = 1.943。<br>
+    取 w = 1.9 → 7 × 1.9 = 13.3 &lt; 13.6，<strong>會有資料裝不進去</strong>。<br>
+    進位到 w = 2.0 → 7 × 2.0 = 14.0 &gt; 13.6 ✓　保證全部放得下。<br>
+    <strong>算完一定要驗算最大值裝不裝得下。這是最常犯的錯。</strong></p>
+  </div>
+</section>
+
+<!-- ══════════ SECTION 5 ══════════ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span>
+    <h2>三種統計圖，三種問題</h2>
+  </div>
+  <p class="sub">
+    下面的表和圖是<strong>連動的</strong>。拉動組距或起始下限，看看同一批資料
+    可以被切成多不一樣的樣子——這也是為什麼「組距的選擇」本身就是一種主觀判斷。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">模擬 02</span>
+      <span class="name">次數分配表建構器</span>
+      <span class="hint">表格與圖形即時連動</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>組距 w<b id="v-w">2.0</b></label>
+            <input type="range" id="in-w" min="1" max="4" step="0.5" value="2">
+          </div>
+          <div class="ctrl">
+            <label>第一組下組限<b id="v-lo">11.0</b></label>
+            <input type="range" id="in-lo" min="9" max="11" step="0.5" value="11">
+          </div>
+          <div class="btns">
+            <button data-c="hist" class="on">直方圖</button>
+            <button data-c="poly">次數多邊圖</button>
+            <button data-c="ogive">累積次數圖</button>
+          </div>
+        </div>
+
+        <div class="readout">
+          <div class="ro"><span class="k">全距 R</span><span class="v" id="v-R">13.6</span></div>
+          <div class="ro"><span class="k">組數 k</span><span class="v acc" id="v-k">7</span></div>
+          <div class="ro"><span class="k">Sturges 建議</span><span class="v" id="v-sturges">6.3</span></div>
+          <div class="ro"><span class="k">Σf 檢查</span><span class="v" id="v-sumf">40</span></div>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="chart" viewBox="0 0 640 300" role="img" aria-label="次數分配圖"></svg></div>
+        <p class="sub" id="chart-note" style="margin:6px 0 0;font-size:13.5px"></p>
+      </div>
+
+      <div class="lab-inner" style="margin-top:18px">
+        <div class="tw" style="margin:0"><table id="freq-table"></table></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div>
+      <h5>直方圖 Histogram</h5>
+      <ul>
+        <li>橫軸放<b>組界</b>，縱軸放次數</li>
+        <li>長條<b>緊鄰不留空隙</b>——因為體長是連續的</li>
+        <li>回答：資料的<b>形狀</b>長怎樣？</li>
+      </ul>
+    </div>
+    <div>
+      <h5>長條圖 Bar Graph</h5>
+      <ul>
+        <li>橫軸放<b>類別</b>（魚種、漁法）</li>
+        <li>長條<b>分開有空隙</b>，順序可任意調換</li>
+        <li>回答：哪一類比較多？</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>雙峰分布：漁業科學的預警訊號</h3>
+  <p>
+    魚類在特定季節產卵，同一批出生的魚（<strong>年齡群 cohort</strong>）會一起長大。
+    所以體長頻度分布上，<strong>每一個峰代表一個年齡群</strong>。
+  </p>
+  <div class="note warn">
+    <span class="lbl">實務意義</span>
+    <p>如果今年的體長分布圖上，<strong>小魚那個峰消失了</strong>，代表去年的繁殖失敗，
+    明後年的可捕資源就會出現斷層。這是不用解剖看耳石就能拿到的資源管理預警訊號。</p>
+  </div>
+
+  <h3>莖葉圖：直方圖辦不到的事</h3>
+  <p>莖葉圖既看得出形狀，又<strong>完整保留每一筆原始數據</strong>。把它逆時針轉 90°，就是一個直方圖。</p>
+  <pre class="stem">莖 │ 葉
+───┼──────────────────
+11 │ 2
+12 │ 5
+13 │ 2  5  8
+14 │ 1  4  7
+15 │ 0  3  6  8
+16 │ 0  2  <b style="color:var(--flag)">4  4  4</b>  7      ← 三個 4：眾數是 16.4
+17 │ 1  3  5  8  9
+18 │ 1  2  4  7  9
+19 │ 0  2  6  8
+20 │ 1  4  8
+21 │ 4  9
+22 │ 3
+23 │ 6
+24 │ 8
+───┴──────────────────
+葉數驗算：1+1+3+3+4+6+5+5+4+3+2+1+1+1 = 40 ✓</pre>
+</section>
+
+<!-- ══════════ SECTION 6 ══════════ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span>
+    <h2>圖表的謊言</h2>
+  </div>
+  <p class="sub">
+    這一節請特別認真看。<strong>你未來讀到的每一份報告、每一則新聞，都可能用上這些手法。</strong>
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">模擬 03</span>
+      <span class="name">截斷縱軸示範</span>
+      <span class="hint">拉動縱軸起點，看同一組資料變成什麼樣子</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <p class="sub" style="margin-top:0">
+          某養殖場四季產量（公噸）：Q1 = 48、Q2 = 50、Q3 = 51、Q4 = 53。
+          <strong>資料完全沒有改動，只有縱軸起點在變。</strong>
+        </p>
+        <div class="ctrls">
+          <div class="ctrl" style="min-width:260px">
+            <label>右圖縱軸起點<b id="v-base">47</b></label>
+            <input type="range" id="in-base" min="0" max="47" step="1" value="47">
+          </div>
+        </div>
+
+        <div class="mis">
+          <div class="mis-panel">
+            <h5>誠實版：縱軸從 0 起</h5>
+            <div class="mis-bars" id="bars-honest"></div>
+            <div class="mis-x"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <p class="sub" style="font-size:13px;margin:10px 0 0">印象：四季差不多，穩定。</p>
+          </div>
+          <div class="mis-panel">
+            <h5>操作版：縱軸從 <span id="base-lbl">47</span> 起</h5>
+            <div class="mis-bars" id="bars-fake"></div>
+            <div class="mis-x"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div>
+            <p class="sub" style="font-size:13px;margin:10px 0 0" id="fake-note"></p>
+          </div>
+        </div>
+
+        <div class="readout">
+          <div class="ro"><span class="k">實際成長率</span><span class="v acc">+10.4<span class="u">%</span></span></div>
+          <div class="ro"><span class="k">視覺上看起來</span><span class="v flag" id="v-fake">+10.4<span class="u">%</span></span></div>
+          <div class="ro"><span class="k">誇大倍數</span><span class="v flag" id="v-mult">1.0<span class="u">×</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">自保方法</span>
+    <p>看到任何長條圖，<strong>第一件事是看縱軸從幾開始</strong>。不是從 0 開始的，就要提高警覺。</p>
+  </div>
+
+  <h3>另外四種手法</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>手法</th><th>怎麼騙人</th><th>破解方式</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>不當的面積</strong></td>
+          <td>用圖案表示數量時，寬高都放大 2 倍 → 面積變 4 倍、立體變 8 倍</td>
+          <td>要求改用<em>長條的長度</em>，長度是一維的</td>
+        </tr>
+        <tr>
+          <td><strong>省略基準</strong></td>
+          <td>「可使魚增重 30%」——跟什麼比？花多久？成本增加多少？樣本多大？</td>
+          <td>追問對照組與時間尺度</td>
+        </tr>
+        <tr>
+          <td><strong>挑選起訖時間</strong></td>
+          <td>只截取上升段講「成長 40%」，只截取下降段講「衰退 35%」</td>
+          <td>問「為什麼是從這一年開始算？」<em>起點若是歷史低點就要小心</em></td>
+        </tr>
+        <tr>
+          <td><strong>混淆比例與絕對數</strong></td>
+          <td>A 混獲率 2%、B 是 4%，但 A 作業 10 萬網次、B 只有 5 千網次<br>→ A 的混獲總量是 B 的 <em>10 倍</em></td>
+          <td>比例與絕對數<em>必須兩個一起看</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>含糊的平均數</h3>
+  <p>某養殖場員工月薪：老闆 30 萬、經理 8 萬、員工 5 人各 3 萬。</p>
+  <div class="readout">
+    <div class="ro"><span class="k">平均數</span><span class="v flag">7.6<span class="u">萬</span></span></div>
+    <div class="ro"><span class="k">中位數</span><span class="v acc">3.0<span class="u">萬</span></span></div>
+    <div class="ro"><span class="k">眾數</span><span class="v acc">3.0<span class="u">萬</span></span></div>
+  </div>
+  <div class="eq">平均數 = (30 + 8 + 3×5) ÷ 7 = 53 ÷ 7 = <b>7.57 萬</b>　←　老闆徵才時愛用</div>
+  <p class="sub">「本場平均月薪 7.6 萬」在<strong>技術上完全正確</strong>，但完全誤導。這就是為什麼下一單元要學三種「平均」的差別。</p>
+</section>
+
+<!-- ══════════ SECTION 7 ══════════ -->
+<!-- ══════════ SECTION 7 ══════════ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span>
+    <h2>無限練習題</h2>
+  </div>
+  <p class="sub">
+    講義裡的「換你做」是固定的題目，做過一次就記得答案了。
+    下面四台產生器<strong>每按一次就換一組新數字</strong>——
+    先自己在紙上算完，再按「顯示計算步驟」對答案。
+    考前想練幾次就練幾次。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習機 01</span>
+      <span class="name">系統抽樣</span>
+      <span class="hint">求 k、列編號、驗算</span>
+    </div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g1-q"></p>
+      <div class="btns">
+        <button class="primary" data-gen="1">↻ 換一題</button>
+        <button data-sol="1">顯示計算步驟</button>
+      </div>
+      <div class="gen-sol" id="g1-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習機 02</span>
+      <span class="name">分層抽樣比例配置</span>
+      <span class="hint">求抽出率、各層樣本數、驗算</span>
+    </div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g2-q"></p>
+      <div class="btns">
+        <button class="primary" data-gen="2">↻ 換一題</button>
+        <button data-sol="2">顯示計算步驟</button>
+      </div>
+      <div class="gen-sol" id="g2-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習機 03</span>
+      <span class="name">圓餅圖圓心角</span>
+      <span class="hint">求相對次數、圓心角、驗算 360°</span>
+    </div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g3-q"></p>
+      <div class="btns">
+        <button class="primary" data-gen="3">↻ 換一題</button>
+        <button data-sol="3">顯示計算步驟</button>
+      </div>
+      <div class="gen-sol" id="g3-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">練習機 04</span>
+      <span class="name">建表前五步驟</span>
+      <span class="hint">求 R、k、w、組限、組界 —— 含整數／小數兩種情況</span>
+    </div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g4-q"></p>
+      <div class="btns">
+        <button class="primary" data-gen="4">↻ 換一題</button>
+        <button data-sol="4">顯示計算步驟</button>
+      </div>
+      <div class="gen-sol" id="g4-s"></div>
+      <p class="gen-tip">⚠️ 這台機器會隨機給你<strong>整數資料</strong>或<strong>小數一位資料</strong>——
+      半單位要取 0.5 還是 0.05，是最常錯的地方，請每次都先確認資料的最小測量單位。</p>
+    </div></div>
+  </div>
+</section>
+
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span>
+    <h2>速記卡</h2>
+  </div>
+
+  <h3>必記公式</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>項目</th><th>公式</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>全距</td><td class="num">R = 最大值 − 最小值</td><td></td></tr>
+        <tr><td>組數（Sturges）</td><td class="num">k = 1 + 3.322 log₁₀ n</td><td>或 k = √n，取 5–20 組</td></tr>
+        <tr><td>組距</td><td class="num">w = R / k</td><td><em>無條件進位</em></td></tr>
+        <tr><td>組界</td><td class="num">下組限 − 半單位　／　上組限 + 半單位</td><td>畫直方圖用</td></tr>
+        <tr><td>組中點</td><td class="num">X<sub>m</sub> = (下組限 + 上組限) / 2</td><td>畫多邊圖用</td></tr>
+        <tr><td>相對次數</td><td class="num">f / n</td><td>總和必為 1.000</td></tr>
+        <tr><td>圓心角</td><td class="num">(f / n) × 360°</td><td>總和必為 360°</td></tr>
+        <tr><td>系統抽樣間隔</td><td class="num">k = N / n</td><td>起點 r 在 1–k 之間隨機</td></tr>
+        <tr><td>分層比例配置</td><td class="num">n<sub>h</sub> = n × (N<sub>h</sub> / N)</td><td>各層加總須等於 n</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">三個一定要做的驗算</span>
+    <p>
+      ① <strong>Σf = n</strong>　②<strong>相對次數總和 = 1.000</strong>（圓心角總和 = 360°）　③<strong>最後一組累積次數 = n</strong><br>
+      這三個檢查只要花 10 秒，卻能抓出九成的計算錯誤。
+    </p>
+  </div>
+</section>
+
+</div><!-- /rail -->
+
+<footer>
+  <p>生物統計學(一)　單元一・二　互動教材　｜　對應 Bluman《統計學 10/e》第 1–2 章</p>
+  <p>配套講義：<code>講義/生統一/W01-W06_資料的性質與整理.md</code>　｜　配套資料集：<code>講義/資料集/A_吳郭魚體長40尾.csv</code></p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════════ 資料 ═══════════════ */
+var L = [16.4,18.2,14.7,20.1,15.3,17.8,13.2,19.6,16.4,21.4,
+         15.8,18.7,12.5,17.1,20.8,14.1,19.2,16.2,22.3,15.0,
+         17.5,13.8,18.9,16.7,20.4,11.2,19.8,15.6,17.3,21.9,
+         14.4,18.4,16.0,23.6,17.9,13.5,19.0,24.8,16.4,18.1];
+var N = L.length, MIN = 11.2, MAX = 24.8, R = 13.6;
+
+function r1(x){ return Math.round(x*10)/10; }
+function r2(x){ return Math.round(x*100)/100; }
+function r3(x){ return Math.round(x*1000)/1000; }
+
+/* ═══════════════ 練習 1：描述 vs 推論 ═══════════════ */
+var Q1 = [
+ {t:"農業部漁業署統計，114 年台灣遠洋漁業總產量為 52.3 萬公噸。", a:0,
+  why:"「總產量」是全面統計（普查）的結果，就是全體本身，沒有發生任何推測。"},
+ {t:"抽驗 200 件水產品，其中 6 件藥物殘留超標。", a:0,
+  why:"只在陳述這 200 件的實際檢驗結果，沒有超出手上的資料。"},
+ {t:"根據上述抽驗結果，推估全國水產品超標率約為 3%。", a:1,
+  why:"從 200 件跳到「全國」，發生了推測。注意：跟上一題是同一批資料，講法不同性質就不同——這是最常考的觀念題型。"},
+ {t:"研究者以 30 尾魚做實驗，宣稱新飼料能使吳郭魚生長速度提升 12%。", a:1,
+  why:"從 30 尾跳到「吳郭魚」這個物種，發生了推測。"},
+ {t:"本班 45 位同學上學期生物統計學平均成績為 76 分。", a:0,
+  why:"只講這 45 位，沒有超出實際量到的範圍。"},
+ {t:"依過去十年資料，預測明年虱目魚產量將下降 5%。", a:1,
+  why:"從過去資料跳到「明年」——時間上的推測也是推論。"}
+];
+var Q1LAB = ["描述統計","推論統計"];
+
+/* ═══════════════ 練習 2：測量尺度 ═══════════════ */
+var Q2 = [
+ {t:"魚種（吳郭魚／虱目魚／石斑）", a:0, why:"純分類，類別之間沒有大小順序。"},
+ {t:"魚體體長（cm）", a:3, why:"0 cm 代表完全沒有長度，是絕對零點，可以講倍數。"},
+ {t:"養殖池水溫（°C）", a:2, why:"間距有意義（20→25 與 30→35 都差 5 度），但 0°C 不代表沒有溫度，所以不能講倍數。"},
+ {t:"卵巢成熟度（I–V 期）", a:1, why:"有成熟先後的順序，但「III 期減 II 期」不等於「V 期減 IV 期」，級距不相等。"},
+ {t:"漁船編號", a:0, why:"有數字但不能做運算——A-0074 不是「兩倍的 A-0037」。這是代號，是名目尺度。"},
+ {t:"一網次漁獲尾數", a:3, why:"0 尾就是沒漁獲，可以講倍數。（順帶一提，它同時是離散變量。）"},
+ {t:"水產品鮮度評級（A／B／C）", a:1, why:"有優劣順序，但 A→B 與 B→C 的品質差距不相等。"},
+ {t:"溶氧量（mg/L）", a:3, why:"0 mg/L 代表完全無氧，是絕對零點。"},
+ {t:"捕撈作業的西元年份", a:2, why:"年份間距相等，但西元 0 年不是「時間的開始」，零點是人為訂的。"},
+ {t:"池水 pH 值", a:2, why:"pH 是氫離子濃度取負對數。pH 0 不是「沒有酸鹼度」，而且 pH 相差 1 代表濃度差 10 倍——pH 4 絕不是 pH 8 的一半。"}
+];
+var Q2LAB = ["名目","順序","區間","比率"];
+
+function buildQuiz(box, data, labels, scoreEl, rightEl){
+  var done = 0, right = 0;
+  box.innerHTML = "";
+  data.forEach(function(q, i){
+    var d = document.createElement("div");
+    d.className = "q";
+    var p = document.createElement("div");
+    p.className = "q-txt";
+    p.innerHTML = '<span class="idx">'+String(i+1).padStart(2,"0")+'</span>' + q.t;
+    d.appendChild(p);
+    var opts = document.createElement("div");
+    opts.className = "opts";
+    var why = document.createElement("div");
+    why.className = "why";
+    why.textContent = q.why;
+    labels.forEach(function(lab, j){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = lab;
+      b.addEventListener("click", function(){
+        if (d.dataset.done) return;
+        d.dataset.done = "1";
+        done++;
+        if (j === q.a) right++;
+        Array.prototype.forEach.call(opts.children, function(bb, k){
+          bb.disabled = true;
+          if (k === q.a) bb.classList.add("correct");
+          else if (k === j) bb.classList.add("wrong");
+        });
+        why.classList.add("show");
+        scoreEl.textContent = done;
+        rightEl.textContent = right;
+      });
+      opts.appendChild(b);
+    });
+    d.appendChild(opts);
+    d.appendChild(why);
+    box.appendChild(d);
+  });
+  scoreEl.textContent = "0";
+  rightEl.textContent = "0";
+}
+
+var q1box = document.getElementById("q1-box");
+var q2box = document.getElementById("q2-box");
+buildQuiz(q1box, Q1, Q1LAB, document.getElementById("q1-score"), document.getElementById("q1-right"));
+buildQuiz(q2box, Q2, Q2LAB, document.getElementById("q2-score"), document.getElementById("q2-right"));
+document.getElementById("q1-reset").addEventListener("click", function(){
+  buildQuiz(q1box, Q1, Q1LAB, document.getElementById("q1-score"), document.getElementById("q1-right"));
+});
+document.getElementById("q2-reset").addEventListener("click", function(){
+  buildQuiz(q2box, Q2, Q2LAB, document.getElementById("q2-score"), document.getElementById("q2-right"));
+});
+
+/* ═══════════════ 抽樣模擬器 ═══════════════ */
+var PONDS = 10, PER = 20, POPN = PONDS*PER, SN = 20;
+/* 各池平均體長不同：模擬放養時間不同 */
+var pondMean = [12.5,13.8,15.0,16.2,17.1,18.0,19.2,20.5,21.8,23.4];
+
+/* 固定種子的偽亂數，讓母體每次載入都一樣 */
+function mkRng(seed){
+  var s = seed >>> 0;
+  return function(){
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+var seedRng = mkRng(20260901);
+function gauss(rng){
+  var u = 1 - rng(), v = rng();
+  return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+}
+var POP = [];
+for (var pi = 0; pi < PONDS; pi++){
+  for (var fi = 0; fi < PER; fi++){
+    POP.push({ pond: pi, len: r1(pondMean[pi] + gauss(seedRng)*1.1) });
+  }
+}
+var MU = POP.reduce(function(a,f){ return a+f.len; }, 0) / POPN;
+
+var pondsEl = document.getElementById("ponds");
+var cellEls = [];
+for (var p2 = 0; p2 < PONDS; p2++){
+  var row = document.createElement("div");
+  row.className = "pond";
+  var lbl = document.createElement("div");
+  lbl.className = "pond-lbl";
+  lbl.textContent = "第 " + (p2+1) + " 池";
+  row.appendChild(lbl);
+  var cells = document.createElement("div");
+  cells.className = "pond-cells";
+  for (var c2 = 0; c2 < PER; c2++){
+    var cell = document.createElement("div");
+    cell.className = "fish";
+    cell.title = "第 " + (p2+1) + " 池　體長 " + POP[p2*PER+c2].len + " cm";
+    cells.appendChild(cell);
+    cellEls.push(cell);
+  }
+  row.appendChild(cells);
+  pondsEl.appendChild(row);
+}
+
+var METHODS = {
+  srs:{ name:"簡單隨機抽樣",
+    desc:"從全部 200 尾中，每一尾被抽中的機率完全相同，隨機抽出 20 尾。這是所有統計方法的預設前提，但實務上池裡的魚沒有編號，往往做不到。" },
+  sys:{ name:"系統抽樣",
+    desc:"k = N / n = 200 / 20 = 10。在 1 到 10 之間隨機決定起點 r，然後每隔 10 尾抽一尾。現場好操作。注意這裡的池子是<em>依體長由小到大排列</em>的，所以每隔 10 尾抽一尾恰好等於每池抽 2 尾——<strong>當母體本身有順序時，系統抽樣會變成一種隱含的分層抽樣</strong>，效果很好。但反過來說，若母體的週期恰好等於 k，就會每次都抽到同一位置，產生嚴重偏誤。" },
+  str:{ name:"分層抽樣",
+    desc:"以「池」為層，每一池各抽 2 尾，合計 20 尾。強迫每一池都有代表——注意它抽出來的樣本在畫面上是「每一列都均勻分布」。" },
+  clu:{ name:"群集抽樣",
+    desc:"以「池」為群集，隨機抽出 1 池，把該池 20 尾全部納入樣本。成本最低（只要處理一個池），但結果完全被抽中的那一池綁架。" },
+  con:{ name:"方便抽樣",
+    desc:"只撈「最好撈的」——模擬體弱、浮在水面的個體，也就是體長最小的 20 尾。這不是機率抽樣，結果不能用來做統計推論。" }
+};
+var curMethod = "srs";
+
+function pickSample(m, rng){
+  var idx = [], i, j;
+  if (m === "srs"){
+    var pool = [];
+    for (i = 0; i < POPN; i++) pool.push(i);
+    for (i = 0; i < SN; i++){
+      j = i + Math.floor(rng()*(pool.length - i));
+      var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+      idx.push(pool[i]);
+    }
+  } else if (m === "sys"){
+    var k = POPN / SN;                    // 10
+    var start = Math.floor(rng()*k);
+    for (i = 0; i < SN; i++) idx.push(start + i*k);
+  } else if (m === "str"){
+    for (var pp = 0; pp < PONDS; pp++){
+      var taken = {};
+      for (i = 0; i < 2; i++){
+        var c;
+        do { c = Math.floor(rng()*PER); } while (taken[c]);
+        taken[c] = 1;
+        idx.push(pp*PER + c);
+      }
+    }
+  } else if (m === "clu"){
+    var pond = Math.floor(rng()*PONDS);
+    for (i = 0; i < PER; i++) idx.push(pond*PER + i);
+  } else {
+    var order = POP.map(function(f, n2){ return {i:n2, v:f.len}; })
+                   .sort(function(a,b){ return a.v - b.v; });
+    for (i = 0; i < SN; i++) idx.push(order[i].i);
+  }
+  return idx;
+}
+
+var liveRng = mkRng(7);
+function drawSample(){
+  var idx = pickSample(curMethod, liveRng);
+  var set = {};
+  idx.forEach(function(i){ set[i] = 1; });
+  for (var i = 0; i < POPN; i++){
+    cellEls[i].classList.toggle("sel", !!set[i]);
+  }
+  var touched = {};
+  idx.forEach(function(i){ touched[Math.floor(i/PER)] = 1; });
+  Array.prototype.forEach.call(pondsEl.children, function(row, pi2){
+    row.classList.toggle("dim", curMethod === "clu" && !touched[pi2]);
+  });
+  var xbar = idx.reduce(function(a,i){ return a + POP[i].len; }, 0) / idx.length;
+  document.getElementById("ro-mu").textContent = MU.toFixed(2);
+  document.getElementById("ro-xbar").textContent = xbar.toFixed(2);
+  var err = xbar - MU;
+  document.getElementById("ro-err").textContent = (err >= 0 ? "+" : "") + err.toFixed(2);
+  document.getElementById("ro-n").textContent = idx.length;
+  document.getElementById("method-desc").innerHTML =
+    "<strong>" + METHODS[curMethod].name + "</strong>　" + METHODS[curMethod].desc;
+}
+
+Array.prototype.forEach.call(document.querySelectorAll("[data-m]"), function(b){
+  b.addEventListener("click", function(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-m]"), function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    curMethod = b.dataset.m;
+    drawSample();
+  });
+});
+document.getElementById("resample").addEventListener("click", drawSample);
+drawSample();
+
+/* ── 重複抽樣 200 次 ── */
+var stripEl = document.getElementById("strip");
+document.getElementById("run-many").addEventListener("click", function(){
+  var order = ["srs","sys","str","clu","con"];
+  var rng = mkRng(424242);
+  var res = {}, lo = MU, hi = MU;
+  order.forEach(function(m){
+    var arr = [];
+    for (var t = 0; t < 200; t++){
+      var idx = pickSample(m, rng);
+      var xb = idx.reduce(function(a,i){ return a + POP[i].len; }, 0) / idx.length;
+      arr.push(xb);
+      if (xb < lo) lo = xb;
+      if (xb > hi) hi = xb;
+    }
+    res[m] = arr;
+  });
+  var pad = (hi - lo) * 0.06 || 1;
+  lo -= pad; hi += pad;
+
+  stripEl.innerHTML = "";
+  order.forEach(function(m){
+    var row = document.createElement("div");
+    row.className = "strip-row";
+    var lb = document.createElement("div");
+    lb.className = "strip-lbl";
+    lb.textContent = METHODS[m].name.replace("抽樣","");
+    var track = document.createElement("div");
+    track.className = "strip-track";
+    var truth = document.createElement("div");
+    truth.className = "truth";
+    truth.style.left = ((MU - lo)/(hi - lo)*100) + "%";
+    track.appendChild(truth);
+    res[m].forEach(function(v){
+      var dot = document.createElement("div");
+      dot.className = "dot";
+      dot.style.left = ((v - lo)/(hi - lo)*100) + "%";
+      track.appendChild(dot);
+    });
+    var mn = res[m].reduce(function(a,v){ return a+v; },0)/res[m].length;
+    var sd = Math.sqrt(res[m].reduce(function(a,v){ return a + Math.pow(v - mn, 2); }, 0) / res[m].length);
+    var stat = document.createElement("div");
+    stat.style.cssText = "font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);width:112px;flex:none;text-align:right";
+    stat.textContent = "偏誤 " + (mn-MU>=0?"+":"") + (mn-MU).toFixed(2) + " ｜ 散布 " + sd.toFixed(2);
+    row.appendChild(lb); row.appendChild(track); row.appendChild(stat);
+    stripEl.appendChild(row);
+  });
+  var sc = document.createElement("div");
+  sc.className = "strip-scale";
+  sc.innerHTML = "<span>" + lo.toFixed(1) + " cm</span><span>μ = " + MU.toFixed(2) +
+                 " cm</span><span>" + hi.toFixed(1) + " cm</span>";
+  stripEl.appendChild(sc);
+});
+
+/* ═══════════════ 七步驟展開 ═══════════════ */
+var STEPS = [
+ {h:"找出最大值與最小值，計算全距 R",
+  b:'掃描 40 筆資料：最大值 = <strong>24.8</strong>，最小值 = <strong>11.2</strong>。' +
+    '<div class="eq">R = 最大值 − 最小值 = 24.8 − 11.2 = <b>13.6</b></div>'},
+ {h:"決定組數 k",
+  b:'組數沒有唯一答案，常用三種參考：經驗法則取 5–20 組、Sturges 公式、平方根法。' +
+    '<div class="eq">Sturges：k = 1 + 3.322 log₁₀(40) = 1 + 3.322 × 1.6021 = <b>6.32</b></div>' +
+    '<div class="eq">平方根法：k = √40 = <b>6.32</b></div>' +
+    '兩種方法都指向 6–7 組。本例取 <strong>k = 7</strong>——因為下一步算出來的組距比較漂亮。組數是可以微調的。'},
+ {h:"計算組距 w（一律無條件進位）",
+  b:'<div class="eq">w = R / k = 13.6 / 7 = 1.943　→　無條件進位　→　<b>w = 2.0</b></div>' +
+    '<strong>為什麼不能四捨五入？</strong>若取 w = 1.9，7 × 1.9 = 13.3 &lt; 13.6，會有資料裝不進去。' +
+    '進位到 2.0，7 × 2.0 = 14.0 &gt; 13.6 ✓，保證全部放得下。'},
+ {h:"決定第一組的下組限",
+  b:'取一個<strong>小於或等於最小值</strong>的方便數字。最小值 = 11.2 → 取 <strong>11.0</strong>（比 11.2 小，且是整數，好看好算）。'},
+ {h:"寫出各組的組限",
+  b:'從 11.0 開始，每組加 2.0。注意上組限是 <strong>12.9 而不是 13.0</strong>——組與組之間不能重疊，否則 13.0 這個數字不知道該放哪一組。' +
+    '<div class="eq">11.0–12.9　13.0–14.9　15.0–16.9　17.0–18.9　19.0–20.9　21.0–22.9　23.0–24.9</div>' +
+    '驗算：最大值 24.8 落在第 7 組 ✓'},
+ {h:"計算組界與組中點",
+  b:'<strong>組界</strong>是把組限往外推「半個最小測量單位」，用來畫直方圖（讓長條連在一起沒有縫隙）。' +
+    '資料是小數一位 → 最小單位 0.1 → 半個 = <strong>0.05</strong>。' +
+    '<div class="eq">第 1 組下組界 = 11.0 − 0.05 = <b>10.95</b>　　上組界 = 12.9 + 0.05 = <b>12.95</b></div>' +
+    '<div class="eq">組中點 Xm = (下組限 + 上組限) / 2 = (11.0 + 12.9) / 2 = <b>11.95</b></div>'},
+ {h:"劃記、計數，完成表格並做三項檢查",
+  b:'逐筆掃過 40 個數字，看落在哪一組就劃記一次，得到次數 f。' +
+    '<div class="eq">f：2　6　10　10　7　3　2</div>' +
+    '<strong>三項必做檢查：</strong><br>' +
+    '① Σf = 2+6+10+10+7+3+2 = <b>40</b> = n ✓<br>' +
+    '② 相對次數總和 = 0.050+0.150+0.250+0.250+0.175+0.075+0.050 = <b>1.000</b> ✓<br>' +
+    '③ 最後一組累積次數 = <b>40</b> = n ✓<br>' +
+    '<br>完整表格請見下方「次數分配表建構器」（把組距設為 2.0、下組限設為 11.0 即為本例）。'}
+];
+var stepsEl = document.getElementById("steps7");
+var shown = 0;
+function renderSteps(){
+  stepsEl.innerHTML = "";
+  for (var i = 0; i < shown; i++){
+    var d = document.createElement("div");
+    d.className = "step";
+    d.innerHTML = '<div class="step-n">STEP ' + (i+1) + '</div>' +
+                  '<div class="step-b"><h5>' + STEPS[i].h + '</h5><p>' + STEPS[i].b + '</p></div>';
+    stepsEl.appendChild(d);
+  }
+  if (shown === 0){
+    var e = document.createElement("p");
+    e.className = "sub";
+    e.style.margin = "0";
+    e.textContent = "按「下一步」開始，一次只看一步——這樣才記得住。";
+    stepsEl.appendChild(e);
+  }
+  document.getElementById("st-next").disabled = shown >= STEPS.length;
+  document.getElementById("st-prev").disabled = shown <= 0;
+}
+document.getElementById("st-next").addEventListener("click", function(){ if (shown < STEPS.length){ shown++; renderSteps(); } });
+document.getElementById("st-prev").addEventListener("click", function(){ if (shown > 0){ shown--; renderSteps(); } });
+document.getElementById("st-all").addEventListener("click", function(){ shown = STEPS.length; renderSteps(); });
+document.getElementById("st-reset").addEventListener("click", function(){ shown = 0; renderSteps(); });
+renderSteps();
+
+/* ═══════════════ 次數分配表建構器 ═══════════════ */
+var chartMode = "hist";
+function buildClasses(w, lo){
+  var cls = [], cum = 0, cur = lo, guard = 0;
+  while (cur <= MAX && guard < 40){
+    var upperLimit = r1(cur + w - 0.1);
+    var bl = r2(cur - 0.05), bu = r2(upperLimit + 0.05);
+    var f = 0;
+    for (var i = 0; i < N; i++) if (L[i] >= bl && L[i] < bu) f++;
+    cum += f;
+    cls.push({ ll:r1(cur), ul:upperLimit, bl:bl, bu:bu, mid:r2((cur+upperLimit)/2), f:f, cf:cum });
+    cur = r1(cur + w);
+    guard++;
+  }
+  return cls;
+}
+function renderTable(cls){
+  var t = document.getElementById("freq-table");
+  var h = '<thead><tr><th>組別</th><th>組限</th><th>組界</th><th class="num">組中點 Xm</th>' +
+          '<th class="num">次數 f</th><th class="num">相對次數</th><th class="num">%</th><th class="num">累積 cf</th></tr></thead><tbody>';
+  var sumF = 0, sumRf = 0, maxF = 0;
+  cls.forEach(function(c){ if (c.f > maxF) maxF = c.f; });
+  cls.forEach(function(c, i){
+    sumF += c.f; sumRf += c.f/N;
+    h += '<tr' + (c.f === maxF && maxF > 0 ? ' class="hi"' : '') + '><td class="num">' + (i+1) + '</td>' +
+         '<td class="num">' + c.ll.toFixed(1) + ' – ' + c.ul.toFixed(1) + '</td>' +
+         '<td class="num">' + c.bl.toFixed(2) + ' – ' + c.bu.toFixed(2) + '</td>' +
+         '<td class="num">' + c.mid.toFixed(2) + '</td>' +
+         '<td class="num">' + c.f + '</td>' +
+         '<td class="num">' + (c.f/N).toFixed(3) + '</td>' +
+         '<td class="num">' + (c.f/N*100).toFixed(1) + '</td>' +
+         '<td class="num">' + c.cf + '</td></tr>';
+  });
+  h += '<tr class="total"><td colspan="4">合計</td><td class="num">' + sumF + '</td>' +
+       '<td class="num">' + sumRf.toFixed(3) + '</td><td class="num">' + (sumRf*100).toFixed(1) + '</td><td></td></tr>';
+  h += '</tbody>';
+  t.innerHTML = h;
+}
+function renderChart(cls){
+  var svg = document.getElementById("chart");
+  var W = 640, H = 300, ml = 42, mr = 16, mt = 18, mb = 46;
+  var pw = W - ml - mr, ph = H - mt - mb;
+  var isOgive = chartMode === "ogive";
+  var maxY = 0;
+  cls.forEach(function(c){ maxY = Math.max(maxY, isOgive ? c.cf : c.f); });
+  maxY = Math.ceil(maxY * 1.15) || 1;
+  var s = "";
+  /* grid + y axis */
+  var ticks = 5;
+  for (var g = 0; g <= ticks; g++){
+    var yv = maxY * g / ticks;
+    var y = mt + ph - (yv / maxY) * ph;
+    s += '<line class="grid" x1="' + ml + '" y1="' + y.toFixed(1) + '" x2="' + (W-mr) + '" y2="' + y.toFixed(1) + '"/>';
+    s += '<text x="' + (ml-7) + '" y="' + (y+3.5).toFixed(1) + '" text-anchor="end">' + Math.round(yv) + '</text>';
+  }
+  s += '<line class="axis" x1="' + ml + '" y1="' + mt + '" x2="' + ml + '" y2="' + (mt+ph) + '"/>';
+  s += '<line class="axis" x1="' + ml + '" y1="' + (mt+ph) + '" x2="' + (W-mr) + '" y2="' + (mt+ph) + '"/>';
+
+  var n = cls.length;
+  if (chartMode === "hist"){
+    var bw = pw / n;
+    cls.forEach(function(c, i){
+      var bh = (c.f / maxY) * ph;
+      var x = ml + i*bw;
+      s += '<rect class="bar" x="' + (x+0.5).toFixed(1) + '" y="' + (mt+ph-bh).toFixed(1) +
+           '" width="' + (bw-1).toFixed(1) + '" height="' + bh.toFixed(1) + '"><title>' +
+           c.ll.toFixed(1) + '–' + c.ul.toFixed(1) + ' cm：' + c.f + ' 尾</title></rect>';
+      if (c.f > 0){
+        s += '<text class="lbl" x="' + (x+bw/2).toFixed(1) + '" y="' + (mt+ph-bh-5).toFixed(1) +
+             '" text-anchor="middle">' + c.f + '</text>';
+      }
+      s += '<text x="' + (x).toFixed(1) + '" y="' + (mt+ph+15) + '" text-anchor="middle">' + c.bl.toFixed(1) + '</text>';
+    });
+    s += '<text x="' + (ml+pw).toFixed(1) + '" y="' + (mt+ph+15) + '" text-anchor="middle">' +
+         cls[n-1].bu.toFixed(1) + '</text>';
+    s += '<text x="' + (ml+pw/2) + '" y="' + (H-8) + '" text-anchor="middle">組界（cm）　—　長條緊鄰不留空隙</text>';
+  } else if (chartMode === "poly"){
+    var bw2 = pw / (n+2);
+    var pts = [];
+    pts.push([ml + bw2*0.5, mt+ph]);
+    cls.forEach(function(c, i){
+      pts.push([ml + bw2*(i+1.5), mt + ph - (c.f/maxY)*ph]);
+    });
+    pts.push([ml + bw2*(n+1.5), mt+ph]);
+    s += '<polyline class="poly" points="' + pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(" ") + '"/>';
+    pts.forEach(function(p){ s += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3"/>'; });
+    cls.forEach(function(c, i){
+      s += '<text x="' + (ml + bw2*(i+1.5)).toFixed(1) + '" y="' + (mt+ph+15) + '" text-anchor="middle">' + c.mid.toFixed(1) + '</text>';
+    });
+    s += '<text x="' + (ml+pw/2) + '" y="' + (H-8) + '" text-anchor="middle">組中點（cm）　—　兩端補次數 0 的組，把折線拉回橫軸</text>';
+  } else {
+    var bw3 = pw / n;
+    var pts2 = [[ml, mt+ph]];
+    cls.forEach(function(c, i){
+      pts2.push([ml + bw3*(i+1), mt + ph - (c.cf/maxY)*ph]);
+    });
+    s += '<polyline class="poly" points="' + pts2.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1); }).join(" ") + '"/>';
+    pts2.forEach(function(p){ s += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3"/>'; });
+    s += '<text x="' + ml + '" y="' + (mt+ph+15) + '" text-anchor="middle">' + cls[0].bl.toFixed(1) + '</text>';
+    cls.forEach(function(c, i){
+      s += '<text x="' + (ml + bw3*(i+1)).toFixed(1) + '" y="' + (mt+ph+15) + '" text-anchor="middle">' + c.bu.toFixed(1) + '</text>';
+    });
+    s += '<text x="' + (ml+pw/2) + '" y="' + (H-8) + '" text-anchor="middle">上組界（cm）　—　永遠單調遞增，中間最陡處就是資料最集中的地方</text>';
+  }
+  svg.innerHTML = s;
+}
+var CHART_NOTE = {
+  hist:"橫軸是<strong>組界</strong>、縱軸是次數。長條緊鄰不留空隙——因為體長是連續的，16.9 和 17.0 之間並沒有斷掉。反白列是次數最多的組。",
+  poly:"橫軸是<strong>組中點</strong>。兩端各補一組次數為 0 的組中點，把折線拉回橫軸——「多邊形」必須是封閉的。優點是<strong>可以把兩年、兩池的分布疊在同一張圖上比較</strong>，直方圖辦不到。",
+  ogive:"橫軸是<strong>上組界</strong>、縱軸是累積次數。一定由左下往右上單調遞增，通常呈 S 形。用它可以直接讀出「低於某體長的有幾尾」。"
+};
+function updateFreq(){
+  var w = parseFloat(document.getElementById("in-w").value);
+  var lo = parseFloat(document.getElementById("in-lo").value);
+  document.getElementById("v-w").textContent = w.toFixed(1);
+  document.getElementById("v-lo").textContent = lo.toFixed(1);
+  var cls = buildClasses(w, lo);
+  document.getElementById("v-R").textContent = R.toFixed(1);
+  document.getElementById("v-k").textContent = cls.length;
+  document.getElementById("v-sturges").textContent = (1 + 3.322*Math.log10(N)).toFixed(1);
+  var sf = cls.reduce(function(a,c){ return a + c.f; }, 0);
+  var sfEl = document.getElementById("v-sumf");
+  sfEl.textContent = sf + (sf === N ? " ✓" : " ✗");
+  sfEl.className = "v " + (sf === N ? "acc" : "flag");
+  renderTable(cls);
+  renderChart(cls);
+  document.getElementById("chart-note").innerHTML = CHART_NOTE[chartMode];
+}
+document.getElementById("in-w").addEventListener("input", updateFreq);
+document.getElementById("in-lo").addEventListener("input", updateFreq);
+Array.prototype.forEach.call(document.querySelectorAll("[data-c]"), function(b){
+  b.addEventListener("click", function(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-c]"), function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    chartMode = b.dataset.c;
+    updateFreq();
+  });
+});
+updateFreq();
+
+/* ═══════════════ 截斷縱軸示範 ═══════════════ */
+var Q = [48, 50, 51, 53];
+function renderMis(){
+  var base = parseInt(document.getElementById("in-base").value, 10);
+  document.getElementById("v-base").textContent = base;
+  document.getElementById("base-lbl").textContent = base;
+
+  var honest = document.getElementById("bars-honest");
+  var fake = document.getElementById("bars-fake");
+  honest.innerHTML = ""; fake.innerHTML = "";
+
+  var hMax = 60;
+  Q.forEach(function(v){
+    var b = document.createElement("div");
+    b.className = "mis-bar";
+    b.style.height = (v / hMax * 100) + "%";
+    b.title = v + " 公噸";
+    honest.appendChild(b);
+  });
+
+  var top = 54;
+  var span = Math.max(top - base, 0.5);
+  Q.forEach(function(v){
+    var b = document.createElement("div");
+    b.className = "mis-bar" + (base > 0 ? " warnc" : "");
+    b.style.height = Math.max((v - base) / span * 100, 0.6) + "%";
+    b.title = v + " 公噸";
+    fake.appendChild(b);
+  });
+
+  var realGrowth = (Q[3] - Q[0]) / Q[0] * 100;
+  var h1 = Math.max(Q[0] - base, 0.001);
+  var h4 = Math.max(Q[3] - base, 0.001);
+  var visualGrowth = (h4 - h1) / h1 * 100;
+  document.getElementById("v-fake").innerHTML =
+    "+" + visualGrowth.toFixed(0) + '<span class="u">%</span>';
+  document.getElementById("v-mult").innerHTML =
+    (visualGrowth / realGrowth).toFixed(1) + '<span class="u">×</span>';
+  document.getElementById("fake-note").innerHTML = base === 0
+    ? "縱軸從 0 起——這時兩張圖是一樣的，沒有誤導。"
+    : "印象：產量大幅成長！視覺上第四季看起來是第一季的 <strong>" +
+      (h4/h1).toFixed(1) + " 倍</strong>，但實際只成長 10.4%。";
+}
+document.getElementById("in-base").addEventListener("input", renderMis);
+renderMis();
+
+/* ═══════════════ 無限練習題產生器 ═══════════════ */
+function ri(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function stepHTML(list){
+  var h = '<div class="steps">';
+  list.forEach(function(st,i){
+    h += '<div class="step"><div class="step-n">STEP ' + (i+1) + '</div>' +
+         '<div class="step-b"><h5>' + st[0] + '</h5><p>' + st[1] + '</p></div></div>';
+  });
+  return h + '</div>';
+}
+
+var GEN = {};
+
+/* ── 01 系統抽樣 ── */
+GEN[1] = function(){
+  var ctx = pick([
+    ["漁市場某日卸魚","箱","檢驗"],
+    ["冷凍廠待驗凍魚","箱","抽驗"],
+    ["養殖場魚隻依序通過檢查台","尾","健康檢查"],
+    ["加工廠輸送帶上的魚體","尾","品質抽檢"],
+    ["漁會登記的養殖場","場","疫病監測"]
+  ]);
+  var k = pick([15,20,25,30,40,50]);
+  var n = pick([40,50,60,75,80,100,120]);
+  var N = k*n;
+  var r = ri(1,k);
+  var last = r + (n-1)*k;
+  document.getElementById("g1-q").innerHTML =
+    ctx[0] + "共 <b>" + N.toLocaleString() + "</b> " + ctx[1] + "，欲以系統抽樣抽出 <b>" + n +
+    "</b> " + ctx[1] + "做" + ctx[2] + "。<br>" +
+    "(a) 求抽樣間隔 k　(b) 若隨機起點 r = <b>" + r + "</b>，寫出前 3 個編號" +
+    "　(c) 寫出第 i 個的一般式　(d) 驗算第 " + n + " 個編號是否可行";
+  document.getElementById("g1-s").innerHTML = stepHTML([
+    ["(a) 計算抽樣間隔 k",
+     '<div class="eq">k = N / n = ' + N + ' / ' + n + ' = <b>' + k + '</b></div>'],
+    ["(b) 前 3 個編號　（起點 r = " + r + "，之後每次加 k）",
+     '<div class="eq">' + r + ',　' + (r+k) + ',　' + (r+2*k) + '</div>'],
+    ["(c) 一般式",
+     '<div class="eq">第 i 個編號 = ' + r + ' + (i − 1) × ' + k + '</div>'],
+    ["(d) 驗算最後一個編號",
+     '<div class="eq">第 ' + n + ' 個 = ' + r + ' + (' + n + ' − 1) × ' + k + ' = ' + r +
+     ' + ' + ((n-1)*k) + ' = <b>' + last + '</b></div>' +
+     last + ' ≤ ' + N + ' ✓　方案可行，共抽出 ' + n + ' 個，全部落在編號範圍內。']
+  ]);
+};
+
+/* ── 02 分層抽樣比例配置 ── */
+GEN[2] = function(){
+  var scen = pick([
+    {t:"某漁港漁船",u:"艘",g:["拖網","刺網","延繩釣","一支釣"],task:"漁獲調查"},
+    {t:"某縣養殖場",u:"場",g:["吳郭魚","虱目魚","石斑","白蝦"],task:"疫病監測"},
+    {t:"某產銷班社員",u:"人",g:["淺海養殖","內陸魚塭","箱網養殖","其他"],task:"問卷調查"},
+    {t:"某冷凍廠庫存",u:"箱",g:["屏東","雲林","嘉義","台南"],task:"品質檢驗"}
+  ]);
+  var rate = pick([0.05,0.10,0.20,0.25]);
+  var unit = Math.round(1/rate);              /* 各層大小需為 unit 的倍數 */
+  var mult = pick([2,3,4,5]);
+  var sizes = [];
+  for (var i=0;i<4;i++) sizes.push(unit*mult*ri(2,10));
+  sizes.sort(function(a,b){ return b-a; });
+  var N = sizes.reduce(function(a,b){ return a+b; },0);
+  var n = Math.round(N*rate);
+  var nh = sizes.map(function(x){ return Math.round(x*rate); });
+  var sum = nh.reduce(function(a,b){ return a+b; },0);
+
+  var qList = scen.g.map(function(g,i){ return g + " <b>" + sizes[i].toLocaleString() + "</b> " + scen.u; }).join("、");
+  document.getElementById("g2-q").innerHTML =
+    scen.t + "共 <b>" + N.toLocaleString() + "</b> " + scen.u + "，依類別分為：" + qList + "。<br>" +
+    "欲抽取 <b>" + n.toLocaleString() + "</b> " + scen.u + "做" + scen.task +
+    "。請用比例配置法計算各層應抽數量，並驗算合計。";
+
+  var rows = '<div class="tw"><table><thead><tr><th>層別</th><th class="num">母體 N<sub>h</sub></th>' +
+             '<th>計算</th><th class="num">樣本 n<sub>h</sub></th></tr></thead><tbody>';
+  scen.g.forEach(function(g,i){
+    rows += '<tr><td>' + g + '</td><td class="num">' + sizes[i] + '</td><td class="num">' +
+            sizes[i] + ' × ' + rate + '</td><td class="num"><strong>' + nh[i] + '</strong></td></tr>';
+  });
+  rows += '<tr class="total"><td>合計</td><td class="num">' + N + '</td><td></td><td class="num">' +
+          sum + ' ✓</td></tr></tbody></table></div>';
+
+  document.getElementById("g2-s").innerHTML = stepHTML([
+    ["計算總抽出率",
+     '<div class="eq">抽出率 = n / N = ' + n + ' / ' + N + ' = <b>' + rate + '</b> = ' + (rate*100) + '%</div>'],
+    ["各層樣本數 = 各層大小 × 抽出率", rows],
+    ["驗算",
+     nh.join(" + ") + " = <b>" + sum + "</b> = n ✓　各層加總等於總樣本數，配置正確。"]
+  ]);
+};
+
+/* ── 03 圓餅圖圓心角 ── */
+GEN[3] = function(){
+  var scen = pick([
+    {t:"某漁船一日漁獲組成",u:"尾",g:["白帶魚","小卷","赤鯮","竹筴魚","其他"]},
+    {t:"某養殖場放養魚種",u:"千尾",g:["虱目魚","吳郭魚","白蝦","烏魚","其他"]},
+    {t:"某漁港漁船漁法別",u:"艘",g:["刺網","拖網","一支釣","延繩釣","其他"]},
+    {t:"某魚市場拍賣魚種",u:"公噸",g:["鯖魚","鰹魚","鬼頭刀","旗魚","其他"]}
+  ]);
+  var T = pick([400,500,600,800,1000,1200]);
+  /* 以 T/100 為單位切成 5 塊，確保加總恰為 T */
+  var u = T/100, parts=[], left=100;
+  for (var i=0;i<4;i++){
+    var lo = 8, hi = left - 8*(4-i);
+    var v = ri(lo, Math.max(lo, Math.min(hi, 34)));
+    parts.push(v); left -= v;
+  }
+  parts.push(left);
+  parts.sort(function(a,b){ return b-a; });
+  var last = parts.pop();                 /* 其他項固定放最後 */
+  parts.push(last);
+  var f = parts.map(function(x){ return x*u; });
+
+  document.getElementById("g3-q").innerHTML =
+    scen.t + "共 <b>" + T.toLocaleString() + "</b> " + scen.u + "，各類別如下：<br>" +
+    scen.g.map(function(g,i){ return g + " <b>" + f[i].toLocaleString() + "</b>"; }).join("、") +
+    "。<br>請計算各類別的相對次數（小數四位）與圓心角（小數二位），並驗算總和。";
+
+  var rows = '<div class="tw"><table><thead><tr><th>類別</th><th class="num">次數 f</th>' +
+             '<th class="num">相對次數 f/n</th><th>圓心角計算</th><th class="num">圓心角</th></tr></thead><tbody>';
+  var sa = 0, sr = 0;
+  scen.g.forEach(function(g,i){
+    var rf = f[i]/T, ang = rf*360;
+    sa += ang; sr += rf;
+    rows += '<tr><td>' + g + '</td><td class="num">' + f[i] + '</td><td class="num">' + rf.toFixed(4) +
+            '</td><td class="num">' + rf.toFixed(4) + ' × 360°</td><td class="num"><strong>' +
+            ang.toFixed(2) + '°</strong></td></tr>';
+  });
+  rows += '<tr class="total"><td>合計</td><td class="num">' + T + '</td><td class="num">' + sr.toFixed(4) +
+          '</td><td></td><td class="num">' + sa.toFixed(2) + '° ✓</td></tr></tbody></table></div>';
+
+  document.getElementById("g3-s").innerHTML = stepHTML([
+    ["相對次數 = 該類次數 ÷ 總次數",
+     '<div class="eq">以 ' + scen.g[0] + ' 為例：' + f[0] + ' / ' + T + ' = <b>' + (f[0]/T).toFixed(4) + '</b></div>'],
+    ["圓心角 = 相對次數 × 360°",
+     '<div class="eq">以 ' + scen.g[0] + ' 為例：' + (f[0]/T).toFixed(4) + ' × 360° = <b>' +
+     (f[0]/T*360).toFixed(2) + '°</b></div>'],
+    ["完成表格", rows],
+    ["驗算",
+     '相對次數總和 = <b>' + sr.toFixed(4) + '</b> ✓　圓心角總和 = <b>' + sa.toFixed(2) +
+     '°</b> ✓<br>兩項都對，計算無誤。若圓心角總和不是 360°，一定有地方算錯。']
+  ]);
+};
+
+/* ── 04 建表前五步驟 ── */
+GEN[4] = function(){
+  var isInt, scen, n, mn, mx, R, kS, k, half, unit, wRaw, w, LL, dec, lastUL;
+  var tries = 0;
+  /* 反覆產生，直到「照標準步驟做完，最大值確實裝得進最後一組」為止，
+     避免出現需要額外加大組距的邊界題目，讓學生的答案一定對得上。 */
+  do {
+    tries++;
+    isInt = Math.random() < 0.5;
+    scen = isInt
+      ? pick([{t:"虱目魚體重",u:"g"},{t:"石斑魚體重",u:"g"},{t:"單網次漁獲量",u:"kg"},{t:"每箱魚尾數",u:"尾"}])
+      : pick([{t:"吳郭魚體長",u:"cm"},{t:"白帶魚體長",u:"cm"},{t:"池水溶氧量",u:"mg/L"},{t:"作業水深",u:"m"}]);
+    n = pick([30,40,50,60,80,100]);
+    if (isInt){ mn = ri(80,260); mx = mn + ri(120,300); }
+    else { mn = ri(60,180)/10; mx = Math.round((mn + ri(80,200)/10)*10)/10; }
+    R = Math.round((mx-mn)*10)/10;
+    kS = 1 + 3.322*Math.log10(n);
+    k = Math.round(kS);
+    if (k < 5) k = 5;
+    half = isInt ? 0.5 : 0.05;
+    unit = isInt ? 1 : 0.1;
+    wRaw = R/k;
+    w = isInt ? Math.ceil(wRaw) : Math.ceil(wRaw*10)/10;
+    LL = isInt ? Math.floor(mn/10)*10 : Math.round((Math.floor(mn*10)/10 - 0.1)*10)/10;
+    lastUL = Math.round((LL + k*w - unit)*10)/10;
+  } while (lastUL < mx && tries < 300);
+  dec = isInt ? 0 : 1;
+  var lims = [];
+  for (var i=0;i<k;i++){
+    var lo = Math.round((LL + i*w)*10)/10;
+    var hi = Math.round((lo + w - unit)*10)/10;
+    lims.push([lo,hi]);
+  }
+  var covered = Math.round(k*w*10)/10;
+
+  document.getElementById("g4-q").innerHTML =
+    "某研究測量 <b>" + n + "</b> 筆" + scen.t + "（" + scen.u + "），" +
+    "最小值 <b>" + mn.toFixed(dec) + "</b>、最大值 <b>" + mx.toFixed(dec) + "</b>。" +
+    "資料記錄至<b>" + (isInt ? "整數" : "小數一位") + "</b>。<br>" +
+    "請完成：(a) 求全距 R　(b) 以 Sturges 公式求組數 k　(c) 求組距 w 並驗算　" +
+    "(d) 決定第一組下組限　(e) 列出各組組限與第 1 組的組界、組中點";
+
+  var tbl = '<div class="tw"><table><thead><tr><th>組別</th><th class="num">組限</th>' +
+            '<th class="num">組界</th><th class="num">組中點 Xm</th></tr></thead><tbody>';
+  lims.forEach(function(c,i){
+    tbl += '<tr><td class="num">' + (i+1) + '</td><td class="num">' + c[0].toFixed(dec) + ' – ' + c[1].toFixed(dec) +
+           '</td><td class="num">' + (c[0]-half).toFixed(isInt?1:2) + ' – ' +
+           (c[1]+half).toFixed(isInt?1:2) + '</td><td class="num">' +
+           ((c[0]+c[1])/2).toFixed(2) + '</td></tr>';
+  });
+  tbl += '</tbody></table></div>';
+
+  document.getElementById("g4-s").innerHTML = stepHTML([
+    ["(a) 全距 R",
+     '<div class="eq">R = 最大值 − 最小值 = ' + mx.toFixed(dec) + ' − ' + mn.toFixed(dec) + ' = <b>' + R.toFixed(dec) + '</b></div>'],
+    ["(b) 組數 k（Sturges 公式）",
+     '<div class="eq">k = 1 + 3.322 log₁₀(' + n + ') = 1 + 3.322 × ' + Math.log10(n).toFixed(4) +
+     ' = ' + kS.toFixed(2) + '　→　取 <b>k = ' + k + '</b></div>' +
+     '參考：√' + n + ' = ' + Math.sqrt(n).toFixed(2) + '，兩法結果相近。組數可在 5–20 之間微調。'],
+    ["(c) 組距 w（一律無條件進位）",
+     '<div class="eq">w = R / k = ' + R.toFixed(dec) + ' / ' + k + ' = ' + wRaw.toFixed(3) +
+     '　→　無條件進位至' + (isInt ? '整數' : '小數一位') + '　→　<b>w = ' + w.toFixed(dec) + '</b></div>' +
+     '<strong>驗算：</strong> k × w = ' + k + ' × ' + w.toFixed(dec) + ' = <b>' + covered.toFixed(dec) +
+     '</b> ' + (covered >= R ? '≥' : '<') + ' R = ' + R.toFixed(dec) + ' ' + (covered >= R ? '✓ 全部資料裝得下' : '✗') ],
+    ["(d) 第一組下組限",
+     '取一個小於或等於最小值 ' + mn.toFixed(dec) + ' 的方便數字 → <b>' + LL.toFixed(dec) + '</b>'],
+    ["(e) 各組組限、組界與組中點",
+     '<strong>半單位怎麼取？</strong> 資料記錄至' + (isInt ? '整數，最小測量單位 = 1' : '小數一位，最小測量單位 = 0.1') +
+     '，所以半單位 = <b>' + half + '</b>。<br>' +
+     '組界 = 下組限 − ' + half + '　／　上組限 + ' + half + '<br>' +
+     '上組限 = 下組限 + w − ' + unit + ' = 下組限 + ' + Math.round((w-unit)*10)/10 +
+     tbl +
+     '<strong>最後驗算：</strong>最大值 ' + mx.toFixed(dec) + ' 落在第 ' +
+     (lims.filter(function(c){ return mx >= c[0]; }).length) + ' 組 ' +
+     (mx <= lims[k-1][1] ? '✓' : '✗ 組距不足，需加大') ]
+  ]);
+};
+
+Array.prototype.forEach.call(document.querySelectorAll("[data-gen]"), function(b){
+  b.addEventListener("click", function(){
+    var i = b.dataset.gen;
+    GEN[i]();
+    document.getElementById("g"+i+"-s").classList.remove("show");
+    var sb = document.querySelector('[data-sol="'+i+'"]');
+    if (sb) sb.textContent = "顯示計算步驟";
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll("[data-sol]"), function(b){
+  b.addEventListener("click", function(){
+    var el = document.getElementById("g"+b.dataset.sol+"-s");
+    var on = el.classList.toggle("show");
+    b.textContent = on ? "隱藏計算步驟" : "顯示計算步驟";
+  });
+});
+GEN[1](); GEN[2](); GEN[3](); GEN[4]();
+
+/* ═══════════════ 開場投影片：課程地圖 ═══════════════ */
+var WEEKS = [
+ [1,  "u1","課程介紹｜描述統計與推論統計",           "Ch 1.1",      "go"],
+ [2,  "u1","資料類型與四種測量尺度｜抽樣方法",       "Ch 1.2–1.3",  "go"],
+ [3,  "u1","研究設計・干擾變數・統計的誤用",         "Ch 1.4–1.6",  "off"],
+ [4,  "u2","次數分配表（建表七步驟）",               "Ch 2.1",      "go"],
+ [5,  "u2","直方圖・次數多邊圖・累積次數圖",         "Ch 2.2",      "off"],
+ [6,  "u2","其他統計圖與圖表的誤用",                 "Ch 2.3",      "go"],
+ [7,  "u3","集中趨勢量數",                           "Ch 3.1",      "go"],
+ [8,  "u3","變異量數｜期中考範圍複習",               "Ch 3.2",      "go"],
+ [9,  "ex","期中考",                                 "Ch 1 – 3.2",  "ex"],
+ [10, "u3","位置測量數與探索性資料分析",             "Ch 3.3–3.4",  "go"],
+ [11, "u4","機率的基本概念與加法規則",               "Ch 4.1–4.2",  "go"],
+ [12, "u4","條件機率與計數規則",                     "Ch 4.3–4.5",  "go"],
+ [13, "u4","離散機率分配與二項分配",                 "Ch 5.1–5.3",  "go"],
+ [14, "u4","常態分配及其應用",                       "Ch 6.1–6.2",  "go"],
+ [15, "u4","抽樣分配與中央極限定理　★",             "Ch 6.3",      "go"],
+ [16, "u4","二項的常態近似｜卜瓦松與超幾何分配",     "Ch 6.4・5.4", "off"],
+ [17, "ex","綜合演練與全學期總複習",                 "Ch 1–6",      "off"],
+ [18, "ex","期末考",                                 "Ch 3.3 – 6",  "ex"]
+];
+var TAGTXT = { go:"授課", off:"放假", ex:"考試" };
+
+(function buildSlide(){
+  var cols = document.getElementById("sl-cols");
+  if (!cols) return;
+  var left = document.createElement("div");
+  var right = document.createElement("div");
+  WEEKS.forEach(function(w, i){
+    var row = document.createElement("div");
+    row.className = "sl-row" + (w[4] === "off" ? " dim" : "");
+    row.innerHTML =
+      '<span class="sl-wk">W' + String(w[0]).padStart(2,"0") + '</span>' +
+      '<span class="sl-bar ' + w[1] + '"></span>' +
+      '<span class="sl-txt">' + w[2] + '<small>' + w[3] + '</small></span>' +
+      '<span class="sl-tag ' + w[4] + '">' + TAGTXT[w[4]] + '</span>';
+    (i < 9 ? left : right).appendChild(row);
+  });
+  cols.appendChild(left);
+  cols.appendChild(right);
+})();
+
+var slFrame = document.getElementById("slide-frame");
+
+function slideZoom(on){
+  slFrame.classList.toggle("zoom", on);
+  document.getElementById("slide-zoom").textContent = on ? "⤡ 離開放大" : "⛶ 放大播放";
+}
+var zoomBtn = document.getElementById("slide-zoom");
+if (zoomBtn){
+  zoomBtn.addEventListener("click", function(){
+    var on = !slFrame.classList.contains("zoom");
+    slideZoom(on);
+    /* 若瀏覽器允許，順便進入真正的全螢幕；被阻擋也不影響放大播放 */
+    try {
+      if (on && slFrame.requestFullscreen) slFrame.requestFullscreen().catch(function(){});
+      else if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function(){});
+    } catch(e){}
+  });
+}
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape" && slFrame && slFrame.classList.contains("zoom")) slideZoom(false);
+});
+var printBtn = document.getElementById("slide-print");
+if (printBtn){ printBtn.addEventListener("click", function(){ window.print(); }); }
+
+})();
+</script>
+</body>
+</html>

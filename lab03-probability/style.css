@@ -1,0 +1,94 @@
+/* lab03 專屬元件：雙向表、篩檢點陣、二項長條、常態曲線、CLT 模擬 */
+
+/* ─── 通用 SVG 圖表 ───────────────────────────────── */
+.chart-wrap{overflow-x:auto}
+svg.chart{display:block;width:100%;height:auto;min-width:460px}
+svg.chart text{font-family:var(--f-mono);font-size:10px;fill:var(--ink-3)}
+svg.chart .axis{stroke:var(--rule-strong);stroke-width:1}
+svg.chart .grid{stroke:var(--rule);stroke-width:1}
+svg.chart .lbl{fill:var(--ink-2);font-size:10.5px}
+svg.chart .bar{fill:var(--accent);opacity:.82}
+svg.chart .bar.hl{fill:var(--flag);opacity:.95}
+svg.chart .curve{fill:none;stroke:var(--accent);stroke-width:2}
+svg.chart .shade{fill:var(--flag);opacity:.28}
+svg.chart .vline{stroke:var(--flag);stroke-width:2;stroke-dasharray:4 3}
+svg.chart .meanline{stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:4 3}
+
+/* ─── 可編輯雙向表 ───────────────────────────────── */
+.twoway{overflow-x:auto;margin:16px 0}
+.twoway table{border-collapse:collapse;min-width:430px}
+.twoway th,.twoway td{border:1px solid var(--rule);padding:7px 10px;text-align:center}
+.twoway th{
+  background:var(--surface-2);font-family:var(--f-mono);font-size:11.5px;
+  color:var(--ink-2);font-weight:600;
+}
+.twoway td.tot,.twoway th.tot{background:var(--accent-soft);font-weight:700;color:var(--accent)}
+.twoway input{
+  width:74px;padding:5px 6px;text-align:center;
+  font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--rule-strong);border-radius:2px;
+}
+.twoway input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+
+/* ─── 機率結果清單 ───────────────────────────────── */
+.plist{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:2px;overflow:hidden;margin:14px 0;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.plist .p{background:var(--surface);padding:10px 14px;display:flex;justify-content:space-between;
+  align-items:baseline;gap:10px}
+.plist .p .n{font-family:var(--f-mono);font-size:12px;color:var(--ink-2)}
+.plist .p .val{font-family:var(--f-mono);font-size:16px;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--ink)}
+.plist .p.hi{background:var(--flag-soft)}
+.plist .p.hi .val{color:var(--flag)}
+
+/* ─── 篩檢點陣圖 ─────────────────────────────────── */
+.dotgrid{
+  display:grid;grid-template-columns:repeat(50,1fr);gap:2px;
+  margin:14px 0;padding:12px;background:var(--surface-2);border-radius:3px;
+}
+.dotgrid i{aspect-ratio:1;border-radius:1px;display:block}
+.dg-tp{background:var(--flag)}
+.dg-fp{background:var(--flag);opacity:.34}
+.dg-fn{background:var(--accent);opacity:.34}
+.dg-tn{background:var(--rule-strong);opacity:.5}
+.dg-legend{display:flex;gap:15px;flex-wrap:wrap;font-family:var(--f-mono);
+  font-size:11px;color:var(--ink-3);margin-top:8px}
+.dg-legend i{display:inline-block;width:10px;height:10px;border-radius:1px;
+  margin-right:5px;vertical-align:-1px}
+
+/* ─── 四格表 ─────────────────────────────────────── */
+.fourbox{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden;margin:16px 0}
+.fourbox .c{background:var(--surface);padding:14px 16px}
+.fourbox .c .t{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);display:block;margin-bottom:4px}
+.fourbox .c .n{font-family:var(--f-mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.fourbox .c.tp{background:var(--flag-soft)}
+.fourbox .c.tp .n{color:var(--flag)}
+.fourbox .c.fp{background:var(--flag-soft);opacity:.72}
+.fourbox .c.fp .n{color:var(--flag)}
+
+/* ─── CLT 模擬 ───────────────────────────────────── */
+.clt-grid{display:grid;gap:16px;grid-template-columns:1fr 1fr;margin:14px 0}
+@media (max-width:820px){.clt-grid{grid-template-columns:1fr}}
+.clt-panel{border:1px solid var(--rule);border-radius:3px;padding:14px;background:var(--surface)}
+.clt-panel h5{
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  margin:0 0 4px;color:var(--ink-2);
+}
+.clt-panel .sub2{font-size:12.5px;color:var(--ink-3);margin:0 0 10px}
+.clt-run{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);margin-top:8px}
+.clt-run b{color:var(--flag)}
+svg.chart .popbar{fill:var(--ink-3);opacity:.6}
+svg.chart .xbbar{fill:var(--accent);opacity:.85}
+svg.chart .normfit{fill:none;stroke:var(--flag);stroke-width:2;stroke-dasharray:5 3}
+
+/* ─── 二項分配表 ─────────────────────────────────── */
+.binom-tbl{overflow-x:auto;margin:12px 0}
+.binom-tbl table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:520px}
+.binom-tbl th,.binom-tbl td{padding:6px 9px;border-bottom:1px solid var(--rule);
+  text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.binom-tbl th{background:var(--surface-2);color:var(--ink-2);font-size:11px}
+.binom-tbl td:first-child,.binom-tbl th:first-child{text-align:left}
+.binom-tbl tr.peak td{background:var(--flag-soft);font-weight:700;color:var(--flag)}

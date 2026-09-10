@@ -1,0 +1,240 @@
+/* lab01 專屬元件：抽樣模擬器、統計圖、莖葉圖、尺度階梯、開場投影片 */
+
+/* ─── pond grid (sampling sim) ──────────────────── */
+.ponds{display:flex;flex-direction:column;gap:4px;margin:14px 0}
+.pond{display:flex;align-items:center;gap:8px}
+.pond-lbl{
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);
+  width:52px;flex:none;text-align:right;
+}
+.pond-cells{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;flex:1}
+.fish{
+  aspect-ratio:1;border-radius:1px;
+  background:var(--rule);
+  transition:background .15s, transform .15s;
+}
+.fish.sel{background:var(--flag);transform:scale(1.35);border-radius:2px}
+.pond.dim .fish{opacity:.3}
+.pond.dim .fish.sel{opacity:1}
+.legend{
+  display:flex;gap:16px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-top:10px;
+}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:1px;margin-right:5px;vertical-align:-1px}
+
+
+/* ─── strip plot for repeated sampling ──────────── */
+.strip{margin-top:16px}
+.strip-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.strip-lbl{font-family:var(--f-mono);font-size:11px;color:var(--ink-2);width:64px;flex:none}
+.strip-track{
+  position:relative;flex:1;height:26px;
+  background:var(--surface-2);border:1px solid var(--rule);border-radius:2px;
+}
+.strip-track .truth{
+  position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--accent);
+}
+.strip-track .dot{
+  position:absolute;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;
+  border-radius:50%;background:var(--flag);opacity:.42;
+}
+.strip-scale{
+  display:flex;justify-content:space-between;
+  font-family:var(--f-mono);font-size:10px;color:var(--ink-3);
+  margin-left:74px;padding-top:2px;
+}
+
+
+/* ─── chart ─────────────────────────────────────── */
+.chart-wrap{overflow-x:auto}
+svg.chart{display:block;width:100%;height:auto;min-width:480px}
+svg.chart text{font-family:var(--f-mono);font-size:10px;fill:var(--ink-3)}
+svg.chart .axis{stroke:var(--rule-strong);stroke-width:1}
+svg.chart .grid{stroke:var(--rule);stroke-width:1}
+svg.chart .bar{fill:var(--accent);opacity:.82}
+svg.chart .bar:hover{opacity:1}
+svg.chart .poly{fill:none;stroke:var(--flag);stroke-width:2;stroke-linejoin:round}
+svg.chart .pt{fill:var(--flag)}
+svg.chart .lbl{fill:var(--ink-2);font-size:10px}
+
+
+/* ─── misleading chart demo ─────────────────────── */
+.mis{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:700px){.mis{grid-template-columns:1fr}}
+.mis-panel{border:1px solid var(--rule);border-radius:2px;padding:14px;background:var(--surface)}
+.mis-panel h5{
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  margin:0 0 10px;color:var(--ink-2);
+}
+.mis-bars{display:flex;align-items:flex-end;gap:10px;height:160px;border-bottom:1px solid var(--rule-strong);padding-bottom:0}
+.mis-bar{flex:1;background:var(--accent);opacity:.85;border-radius:1px 1px 0 0;min-height:1px}
+.mis-bar.warnc{background:var(--flag)}
+.mis-x{display:flex;gap:10px;margin-top:5px}
+.mis-x span{flex:1;text-align:center;font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3)}
+
+
+/* ─── stem plot ─────────────────────────────────── */
+pre.stem{
+  font-family:var(--f-mono);font-size:13px;line-height:1.55;
+  background:var(--surface);border:1px solid var(--rule);border-radius:2px;
+  padding:16px 18px;overflow-x:auto;margin:16px 0;color:var(--ink);
+}
+
+
+/* ─── scale ladder ──────────────────────────────── */
+.ladder{display:flex;flex-direction:column-reverse;gap:0;margin:22px 0}
+.rung{
+  display:grid;grid-template-columns:96px 1fr;gap:16px;
+  padding:14px 16px;border:1px solid var(--rule);border-bottom:none;background:var(--surface);
+}
+.ladder .rung:first-child{border-bottom:1px solid var(--rule);border-radius:0 0 3px 3px}
+.ladder .rung:last-child{border-radius:3px 3px 0 0}
+.rung-name{font-family:var(--f-display);font-weight:700;font-size:16px}
+.rung-name small{display:block;font-family:var(--f-mono);font-size:10.5px;font-weight:400;color:var(--ink-3);letter-spacing:.06em}
+.rung-txt{font-size:14.5px;color:var(--ink-2)}
+.rung-txt b{color:var(--ink)}
+.rung:nth-child(1){border-left:3px solid var(--rule-strong)}
+.rung:nth-child(2){border-left:3px solid var(--ink-3)}
+.rung:nth-child(3){border-left:3px solid var(--accent)}
+.rung:nth-child(4){border-left:3px solid var(--flag)}
+
+
+/* ─── 開場投影片 ─────────────────────────────────
+   以 1280×720 為設計稿，改用容器查詢單位 (1cqw = 12.8px) 自動縮放，
+   不需 JavaScript，因此任何情況下都不會停在未縮放狀態。
+   不支援 cqw 的瀏覽器會保留前面宣告的 px 值，仍可閱讀。          */
+.slide-frame{
+  position:relative;width:100%;aspect-ratio:16/9;
+  container-type:inline-size;
+  border:1px solid var(--rule-strong);border-radius:3px;
+  background:var(--surface);overflow:hidden;box-shadow:var(--shadow);
+}
+/* 放大播放：鎖 16:9 置中，用超大 box-shadow 當背景幕 */
+.slide-frame.zoom,
+.slide-frame:fullscreen{
+  position:fixed;inset:0;margin:auto;
+  width:min(100vw, 177.78vh);
+  height:min(56.25vw, 100vh);
+  aspect-ratio:auto;border:none;border-radius:0;z-index:999;
+  box-shadow:0 0 0 100vmax var(--paper);
+}
+.slide-stage{
+  width:100%;height:100%;
+  padding:34px 42px 26px;
+  padding:2.66cqw 3.28cqw 2.03cqw;
+  display:flex;flex-direction:column;background:var(--surface);color:var(--ink);
+}
+.sl-head{
+  display:flex;align-items:flex-end;
+  gap:16px;gap:1.25cqw;
+  padding-bottom:14px;padding-bottom:1.09cqw;
+  border-bottom:2px solid var(--accent);
+}
+.sl-head h3{
+  font-family:var(--f-display);font-weight:900;
+  font-size:34px;font-size:2.66cqw;
+  margin:0;line-height:1.1;letter-spacing:-.01em;
+}
+.sl-head .sl-sub{
+  font-family:var(--f-mono);font-size:13px;font-size:1.02cqw;
+  color:var(--ink-2);letter-spacing:.04em;padding-bottom:.3cqw;
+}
+.sl-head .sl-meta{
+  margin-left:auto;text-align:right;font-family:var(--f-mono);
+  font-size:12px;font-size:.94cqw;color:var(--ink-3);line-height:1.6;
+}
+.sl-cols{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0 26px;gap:0 2.03cqw;
+  flex:1;padding-top:12px;padding-top:.94cqw;
+}
+.sl-row{
+  display:grid;
+  grid-template-columns:40px 5px 1fr 62px;
+  grid-template-columns:3.13cqw .39cqw 1fr 4.84cqw;
+  gap:9px;gap:.7cqw;
+  align-items:center;
+  padding:5px 0;padding:.39cqw 0;
+  border-bottom:1px solid var(--rule);
+}
+.sl-row:last-child{border-bottom:none}
+.sl-wk{
+  font-family:var(--f-mono);font-size:14px;font-size:1.09cqw;
+  font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums;
+}
+.sl-bar{width:100%;height:26px;height:2.03cqw;border-radius:1px;background:var(--rule-strong)}
+.sl-bar.u1{background:var(--u1)}.sl-bar.u2{background:var(--u2)}
+.sl-bar.u3{background:var(--u3)}.sl-bar.u4{background:var(--u4)}
+.sl-bar.ex{background:var(--flag)}
+.sl-txt{font-size:15px;font-size:1.17cqw;line-height:1.35}
+.sl-txt b{font-weight:700}
+.sl-txt small{
+  display:block;font-family:var(--f-mono);
+  font-size:10.5px;font-size:.82cqw;color:var(--ink-3);letter-spacing:.03em;
+}
+.sl-tag{
+  font-family:var(--f-mono);font-size:10.5px;font-size:.82cqw;
+  text-align:center;padding:3px 0;padding:.23cqw 0;
+  border-radius:2px;letter-spacing:.06em;
+}
+.sl-tag.go{background:var(--accent-soft);color:var(--accent)}
+.sl-tag.off{background:var(--surface-2);color:var(--ink-3)}
+.sl-tag.ex{background:var(--flag-soft);color:var(--flag);font-weight:700}
+.sl-row.dim .sl-txt{color:var(--ink-3)}
+.sl-foot{
+  display:flex;align-items:center;flex-wrap:wrap;
+  gap:20px;gap:1.56cqw;
+  padding-top:12px;padding-top:.94cqw;
+  margin-top:.4cqw;border-top:1px solid var(--rule);
+  font-family:var(--f-mono);font-size:11.5px;font-size:.9cqw;color:var(--ink-2);
+}
+.sl-foot .k{color:var(--ink-3)}
+.sl-foot b{color:var(--flag)}
+.sl-legend{display:flex;gap:13px;gap:1.02cqw;align-items:center}
+.sl-legend i{
+  display:inline-block;width:9px;height:9px;
+  width:.7cqw;height:.7cqw;
+  border-radius:1px;margin-right:.4cqw;vertical-align:-1px;
+}
+.slide-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.slide-tools .esc{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3)}
+
+/* 窄螢幕：投影片放棄 16:9，改成可讀的單欄清單 */
+@media (max-width:760px){
+  .slide-frame{aspect-ratio:auto;height:auto;overflow:visible}
+  .slide-frame.zoom,.slide-frame:fullscreen{
+    position:static;width:auto;height:auto;margin:0;box-shadow:var(--shadow);
+    border:1px solid var(--rule-strong);z-index:auto;
+  }
+  .slide-stage{padding:18px 16px 14px;height:auto}
+  .sl-head{flex-wrap:wrap;gap:6px}
+  .sl-head h3{font-size:21px}
+  .sl-head .sl-sub{font-size:12px}
+  .sl-head .sl-meta{margin-left:0;text-align:left;font-size:11px;flex-basis:100%}
+  .sl-cols{grid-template-columns:1fr;gap:0;padding-top:8px}
+  .sl-row{grid-template-columns:34px 4px 1fr 48px;gap:8px;padding:7px 0}
+  .sl-wk{font-size:12px}
+  .sl-bar{height:24px}
+  .sl-txt{font-size:14px}
+  .sl-txt small{font-size:10px}
+  .sl-tag{font-size:10px;padding:3px 0}
+  .sl-foot{font-size:11px;gap:10px;padding-top:12px;flex-direction:column;align-items:flex-start}
+  .sl-legend{flex-wrap:wrap;gap:8px}
+  .sl-legend i{width:9px;height:9px;margin-right:4px}
+  #slide-zoom{display:none}
+}
+
+@media print{
+  body>*{display:none !important}
+  body>.wrap{display:block !important}
+  .wrap>*{display:none !important}
+  .wrap>.rail{display:block !important}
+  .rail>*{display:none !important}
+  .rail #s1{display:block !important}
+  #s1>*{display:none !important}
+  #s1 .slide-block{display:block !important}
+  .slide-block>*{display:none !important}
+  .slide-block>.slide-frame{display:block !important}
+  .slide-frame{border:none;box-shadow:none;page-break-inside:avoid}
+}
+

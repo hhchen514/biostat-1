@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生物統計學(一) 互動教材</title>
+<meta name="description" content="國立高雄科技大學 漁業生產與管理系　生物統計學(一)　18 週互動教材與練習">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* 課程主目錄專屬版面 */
+.hero{padding:72px 0 44px;border-bottom:1px solid var(--rule)}
+.hero h1{font-size:clamp(36px,6.4vw,62px);margin-bottom:18px}
+.hero .lede{font-size:clamp(16px,2vw,19px);max-width:60ch}
+
+.labs{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:26px 0 8px}
+.lab-card{
+  display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+  padding:24px 26px 22px;box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;
+  transition:border-color .14s, transform .14s;
+}
+a.lab-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+a.lab-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.lab-card.soon{opacity:.62;cursor:default}
+.lab-card .no{
+  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;
+  color:var(--accent);margin-bottom:10px;display:flex;gap:10px;align-items:center;
+}
+.lab-card .no i{
+  display:inline-block;width:26px;height:7px;
+  background:repeating-linear-gradient(to right,var(--accent) 0 1px,transparent 1px 5px);
+  opacity:.7;
+}
+.lab-card h3{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0 0 8px;line-height:1.3}
+.lab-card p{font-size:14.5px;color:var(--ink-2);margin:0 0 16px;max-width:none;flex:1}
+.lab-card .wks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.lab-card .wk{
+  font-family:var(--f-mono);font-size:10.5px;padding:3px 8px;border-radius:2px;
+  background:var(--surface-2);color:var(--ink-2);
+}
+.lab-card .wk.off{opacity:.45;text-decoration:line-through}
+.lab-card .tools{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);line-height:1.8}
+.lab-card .go{
+  font-family:var(--f-mono);font-size:12px;color:var(--accent);
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);
+}
+.lab-card.soon .go{color:var(--ink-3)}
+
+.sched{overflow-x:auto;margin:20px 0}
+.sched table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:620px}
+.sched th{
+  background:var(--surface-2);font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.07em;color:var(--ink-2);padding:9px 12px;text-align:left;white-space:nowrap;
+}
+.sched td{padding:8px 12px;border-bottom:1px solid var(--rule)}
+.sched td:first-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ink-2);width:56px}
+.sched tr.off td{color:var(--ink-3)}
+.sched tr.exam td{background:var(--flag-soft);font-weight:700}
+.sched .u{
+  display:inline-block;width:6px;height:6px;border-radius:1px;margin-right:8px;vertical-align:1px;
+}
+.sched .u1{background:var(--u1)}.sched .u2{background:var(--u2)}
+.sched .u3{background:var(--u3)}.sched .u4{background:var(--u4)}
+.sched .u0{background:var(--flag)}
+.sched a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule-strong)}
+.sched a:hover{border-bottom-color:var(--accent)}
+
+.dl{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:20px 0}
+.dl div{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:16px 18px}
+.dl h4{font-family:var(--f-body);font-size:14.5px;font-weight:700;margin:0 0 6px}
+.dl p{font-size:13.5px;color:var(--ink-2);margin:0}
+.dl code{font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow"><span class="tick"></span>國立高雄科技大學　漁業生產與管理系</p>
+  <h1>生物統計學(一)</h1>
+  <p class="lede">
+    池子裡有 12,000 尾魚。老闆問你：「現在平均多大？可以出貨了嗎？」
+    你不可能全部量一遍——你只能撈 40 尾。
+    這門課就是在回答：那 40 尾能不能代表 12,000 尾。
+  </p>
+  <div class="chips" style="margin-top:22px">
+    <span class="chip">2 學分・每週 2 節</span>
+    <span class="chip">Bluman《統計學 10/e》第 1–6 章</span>
+    <span class="chip">115 學年度第 1 學期</span>
+  </div>
+</header>
+
+<div class="rail">
+
+<section id="labs">
+  <div class="sec-head"><span class="sec-num">01</span>
+    <h2>互動練習</h2>
+  </div>
+  <p class="sub">
+    每一冊講義對應一個互動實驗室。裡面的模擬器與練習機都是<strong>可以動手拉的</strong>——
+    練習機每按一次就換一組新數字，考前想練幾次就練幾次。
+  </p>
+
+  <div class="labs">
+
+    <a class="lab-card" href="lab01-data-and-sampling/">
+      <span class="no"><i></i>LAB 01</span>
+      <h3>資料的性質、收集與整理</h3>
+      <p>從「40 個散亂的數字」到一張看得懂的表。抽樣方法怎麼選、次數分配表怎麼建、圖表怎麼騙人。</p>
+      <div class="wks">
+        <span class="wk">W1</span><span class="wk">W2</span><span class="wk off">W3</span>
+        <span class="wk">W4</span><span class="wk off">W5</span><span class="wk">W6</span>
+      </div>
+      <div class="tools">
+        課程地圖投影片 ／ 抽樣模擬器<br>
+        次數分配表建構器 ／ 截斷縱軸示範<br>
+        四台無限練習機
+      </div>
+      <div class="go">開始練習 →</div>
+    </a>
+
+    <a class="lab-card" href="lab02-descriptive/">
+      <span class="no"><i></i>LAB 02</span>
+      <h3>資料的描述</h3>
+      <p>把整張表濃縮成幾個數字。親手拖動那尾 412 g 的魚，看著平均數狂奔、中位數幾乎不動。</p>
+      <div class="wks">
+        <span class="wk">W7</span><span class="wk">W8</span>
+        <span class="wk">W10</span>
+      </div>
+      <div class="tools">
+        拖曳離群值 ／ 離差的幾何意義<br>
+        經驗法則實測 ／ 箱型圖產生器<br>
+        四台無限練習機
+      </div>
+      <div class="go">開始練習 →</div>
+    </a>
+
+    <a class="lab-card" href="lab03-probability/">
+      <span class="no"><i></i>LAB 03</span>
+      <h3>機率與機率分配</h3>
+      <p>敏感度 90% 的快篩驗出陽性，真的有病的機率只有 48.6%。拉動滑桿看它怎麼崩塌，再用一千次抽樣看歪母體變鐘形。</p>
+      <div class="wks">
+        <span class="wk">W11</span><span class="wk">W12</span><span class="wk">W13</span>
+        <span class="wk">W14</span><span class="wk">W15</span>
+      </div>
+      <div class="tools">
+        雙向表計算機 ／ 篩檢點陣圖<br>
+        二項分配探索器 ／ 常態分配計算機<br>
+        中央極限定理模擬器 ★ ／ 五台練習機
+      </div>
+      <div class="go">開始練習 →</div>
+    </a>
+
+  </div>
+</section>
+
+<section id="schedule">
+  <div class="sec-head"><span class="sec-num">02</span>
+    <h2>18 週課程進度</h2>
+  </div>
+  <p class="sub">
+    第 <strong>3、5、16、17 週</strong>放假，內容併入前後週講授。
+    核心章節全部安排在第 1–15 週完成，所以放假不影響觀念的連貫性。
+  </p>
+
+  <div class="sched">
+    <table>
+      <thead><tr><th>週次</th><th>授課內容</th><th>章節</th><th>互動練習</th></tr></thead>
+      <tbody>
+        <tr><td>W1</td><td><span class="u u1"></span>課程介紹｜描述統計與推論統計</td><td>1.1</td><td><a href="lab01-data-and-sampling/#s1">Lab 01</a></td></tr>
+        <tr><td>W2</td><td><span class="u u1"></span>資料類型與四種測量尺度｜抽樣方法</td><td>1.2–1.3</td><td><a href="lab01-data-and-sampling/#s2">Lab 01</a></td></tr>
+        <tr class="off"><td>W3</td><td><span class="u u1"></span>研究設計・干擾變數・統計的誤用（放假）</td><td>1.4–1.6</td><td>—</td></tr>
+        <tr><td>W4</td><td><span class="u u2"></span>次數分配表（建表七步驟）</td><td>2.1</td><td><a href="lab01-data-and-sampling/#s4">Lab 01</a></td></tr>
+        <tr class="off"><td>W5</td><td><span class="u u2"></span>直方圖・次數多邊圖・累積次數圖（放假）</td><td>2.2</td><td><a href="lab01-data-and-sampling/#s5">Lab 01</a></td></tr>
+        <tr><td>W6</td><td><span class="u u2"></span>其他統計圖與圖表的誤用</td><td>2.3</td><td><a href="lab01-data-and-sampling/#s6">Lab 01</a></td></tr>
+        <tr><td>W7</td><td><span class="u u3"></span>集中趨勢量數</td><td>3.1</td><td><a href="lab02-descriptive/#s1">Lab 02</a></td></tr>
+        <tr><td>W8</td><td><span class="u u3"></span>變異量數｜期中考範圍複習</td><td>3.2</td><td><a href="lab02-descriptive/#s2">Lab 02</a></td></tr>
+        <tr class="exam"><td>W9</td><td><span class="u u0"></span>期中考</td><td>1 – 3.2</td><td>—</td></tr>
+        <tr><td>W10</td><td><span class="u u3"></span>位置測量數與探索性資料分析</td><td>3.3–3.4</td><td><a href="lab02-descriptive/#s4">Lab 02</a></td></tr>
+        <tr><td>W11</td><td><span class="u u4"></span>機率的基本概念與加法規則</td><td>4.1–4.2</td><td><a href="lab03-probability/#s1">Lab 03</a></td></tr>
+        <tr><td>W12</td><td><span class="u u4"></span>條件機率與計數規則</td><td>4.3–4.5</td><td><a href="lab03-probability/#s2">Lab 03</a></td></tr>
+        <tr><td>W13</td><td><span class="u u4"></span>離散機率分配與二項分配</td><td>5.1–5.3</td><td><a href="lab03-probability/#s3">Lab 03</a></td></tr>
+        <tr><td>W14</td><td><span class="u u4"></span>常態分配及其應用</td><td>6.1–6.2</td><td><a href="lab03-probability/#s4">Lab 03</a></td></tr>
+        <tr><td>W15</td><td><span class="u u4"></span><strong>抽樣分配與中央極限定理　★</strong></td><td>6.3</td><td><a href="lab03-probability/#s5">Lab 03</a></td></tr>
+        <tr class="off"><td>W16</td><td><span class="u u4"></span>二項的常態近似｜卜瓦松與超幾何（放假）</td><td>6.4・5.4</td><td>—</td></tr>
+        <tr class="off"><td>W17</td><td><span class="u u0"></span>綜合演練與全學期總複習（放假）</td><td>1–6</td><td>—</td></tr>
+        <tr class="exam"><td>W18</td><td><span class="u u0"></span>期末考</td><td>3.3 – 6</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">為什麼第 15 週有顆星</span>
+    <p><strong>抽樣分配與中央極限定理</strong>是本學期的終點，也是下學期生物統計學(二)的起點——
+    所有的信賴區間與假設檢定都建立在它上面。這一週聽不懂，下學期會整學期很辛苦。</p>
+  </div>
+</section>
+
+<section id="materials">
+  <div class="sec-head"><span class="sec-num">03</span>
+    <h2>課程教材</h2>
+  </div>
+
+  <div class="dl">
+    <div>
+      <h4>講義（三冊）</h4>
+      <p>每個範例後面都接一題同型不同數字的「換你做」，解答摺疊在下方。<br>
+      <code>講義/生統一/</code></p>
+    </div>
+    <div>
+      <h4>簡報（15 份）</h4>
+      <p>每週一份，中文為主、專有名詞附英文對照，例題與解題流程逐步展開。<br>
+      <code>講義/簡報/</code></p>
+    </div>
+    <div>
+      <h4>資料集</h4>
+      <p>所有範例共用的漁業資料，CSV 格式可直接匯入 Excel 練習。<br>
+      <code>講義/資料集/</code></p>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="lbl">怎麼用這些教材</span>
+    <p>
+      <strong>上課前</strong>：看一眼該週的講義「本週學習目標」，知道要學什麼。<br>
+      <strong>上課中</strong>：跟著簡報的例題一起算，不要只看。<br>
+      <strong>上課後</strong>：做講義的「換你做」，再到互動練習的練習機隨機出題練到熟。
+    </p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>生物統計學(一)　Biostatistics (I)　｜　國立高雄科技大學 漁業生產與管理系</p>
+  <p>教材以 Bluman《統計學 10/e》第 1–6 章為架構，所有範例取材自漁業與水產領域之實際情境。</p>
+</footer>
+
+</div>
+</body>
+</html>

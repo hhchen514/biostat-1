@@ -1,0 +1,89 @@
+/* lab02 專屬元件：可拖曳數線、離差圖、箱型圖、經驗法則帶狀圖 */
+
+/* ─── 通用 SVG 圖表 ───────────────────────────────── */
+.chart-wrap{overflow-x:auto}
+svg.chart{display:block;width:100%;height:auto;min-width:460px;touch-action:none}
+svg.chart text{font-family:var(--f-mono);font-size:10px;fill:var(--ink-3)}
+svg.chart .axis{stroke:var(--rule-strong);stroke-width:1}
+svg.chart .grid{stroke:var(--rule);stroke-width:1}
+svg.chart .lbl{fill:var(--ink-2);font-size:10.5px}
+
+/* ─── 可拖曳數線 ─────────────────────────────────── */
+svg.chart .dot{
+  fill:var(--accent);stroke:var(--surface);stroke-width:2;
+  cursor:grab;transition:r .12s;
+}
+svg.chart .dot:hover{r:9}
+svg.chart .dot.dragging{cursor:grabbing;fill:var(--flag)}
+svg.chart .dot.out{fill:var(--flag)}
+svg.chart .mark-mean{stroke:var(--flag);stroke-width:2.5}
+svg.chart .mark-med{stroke:var(--accent);stroke-width:2.5;stroke-dasharray:5 3}
+svg.chart .mark-lbl{font-size:11px;font-weight:600}
+
+.drag-hint{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);
+  margin-top:8px;
+}
+.drag-hint b{color:var(--flag)}
+
+/* ─── 統計量比較列 ───────────────────────────────── */
+.statrow{
+  display:grid;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:2px;overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(126px,1fr));margin:14px 0;
+}
+.statrow .s{background:var(--surface);padding:11px 14px}
+.statrow .s .k{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:3px;
+}
+.statrow .s .v{
+  font-family:var(--f-mono);font-size:19px;font-weight:600;
+  font-variant-numeric:tabular-nums;color:var(--ink);
+}
+.statrow .s .v.acc{color:var(--accent)}
+.statrow .s .v.flag{color:var(--flag)}
+.statrow .s .d{
+  font-family:var(--f-mono);font-size:10.5px;margin-top:2px;display:block;color:var(--ink-3);
+}
+.statrow .s .d.up{color:var(--flag)}
+.statrow .s.hi{background:var(--flag-soft)}
+
+/* ─── 離差圖 ─────────────────────────────────────── */
+svg.chart .dev{stroke:var(--flag);stroke-width:1.5;opacity:.65}
+svg.chart .dev.neg{stroke:var(--accent)}
+svg.chart .meanline{stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:4 3}
+svg.chart .band1{fill:var(--accent);opacity:.14}
+svg.chart .band2{fill:var(--accent);opacity:.09}
+svg.chart .band3{fill:var(--accent);opacity:.05}
+
+/* ─── 箱型圖 ─────────────────────────────────────── */
+svg.chart .box{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+svg.chart .whisk{stroke:var(--accent);stroke-width:1.5}
+svg.chart .medline{stroke:var(--flag);stroke-width:2.5}
+svg.chart .fence{stroke:var(--rule-strong);stroke-width:1;stroke-dasharray:3 3}
+svg.chart .outlier{fill:none;stroke:var(--flag);stroke-width:2}
+
+/* ─── 五數綜合表 ─────────────────────────────────── */
+.five{display:flex;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:2px;overflow:hidden;margin:14px 0;flex-wrap:wrap}
+.five div{background:var(--surface);padding:10px 12px;flex:1;min-width:96px;text-align:center}
+.five .k{font-family:var(--f-mono);font-size:10px;color:var(--ink-3);display:block;margin-bottom:3px}
+.five .v{font-family:var(--f-mono);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ─── 資料輸入框 ─────────────────────────────────── */
+textarea.data{
+  width:100%;min-height:76px;resize:vertical;
+  font-family:var(--f-mono);font-size:13px;line-height:1.7;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--rule-strong);border-radius:2px;padding:10px 12px;
+}
+textarea.data:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.data-err{font-size:12.5px;color:var(--bad);margin-top:6px;min-height:1.2em}
+
+/* ─── 並列箱型圖圖例 ─────────────────────────────── */
+.bp-legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--f-mono);
+  font-size:11px;color:var(--ink-3);margin-top:10px}
+.bp-legend i{display:inline-block;width:10px;height:10px;border-radius:1px;
+  margin-right:5px;vertical-align:-1px}

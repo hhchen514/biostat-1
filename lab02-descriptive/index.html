@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>被一尾魚拉走的平均｜生物統計學(一)</title>
+<meta name="description" content="生物統計學(一) 第 7–10 週互動教材：拖曳離群值看平均數與中位數誰在動、標準差的幾何意義、經驗法則實測、箱型圖產生器。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow"><span class="tick"></span>生物統計學(一)　單元三　第 7–10 週　｜　<a href="../" style="color:var(--accent);text-decoration:none">← 課程主目錄</a></p>
+  <h1>被一尾魚拉走的平均</h1>
+  <p class="lede">
+    一池 12 尾魚，其中一尾 412 g。把它拿掉，平均數掉了 13.5 g、標準差縮成六分之一，
+    但中位數只動了 1.5 g。這一頁要你親手拖動那尾魚，看著兩條線一個狂奔、一個幾乎不動。
+  </p>
+  <div class="chips">
+    <span class="chip">W7 集中趨勢量數</span>
+    <span class="chip">W8 變異量數</span>
+    <span class="chip">W10 位置測量數與箱型圖</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#s1">01　四種平均</a></li>
+    <li><a href="#s2">02　標準差</a></li>
+    <li><a href="#s3">03　經驗法則</a></li>
+    <li><a href="#s4">04　箱型圖</a></li>
+    <li><a href="#s5">05　無限練習題</a></li>
+    <li><a href="#s6">06　速記卡</a></li>
+  </ul>
+</nav>
+
+<div class="rail">
+
+<!-- ══════════ 01 ══════════ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span>
+    <h2>四種平均，四個答案</h2>
+  </div>
+  <p class="sub">
+    「平均」有四種。講的人挑對自己有利的那一種、卻不說是哪一種，
+    就是第 3 週講過的<strong>含糊的平均數</strong>。下面這台機器讓你同時看到全部四種。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 01</span>
+      <span class="name">拖曳離群值</span>
+      <span class="hint">用滑鼠拖動任何一個點</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:14px">
+          <button data-preset="pond" class="on">養殖池 12 尾（含 412 g）</button>
+          <button data-preset="even">大致對稱的資料</button>
+          <button data-preset="skew">明顯右偏的資料</button>
+          <button class="ghost" id="d1-reset">↺ 復原</button>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="dragline" viewBox="0 0 660 190" role="img" aria-label="可拖曳的數線"></svg></div>
+        <p class="drag-hint">
+          <b>橘色實線</b>＝平均數　　<b style="color:var(--accent)">藍色虛線</b>＝中位數　　拖動最右邊那個點試試看
+        </p>
+
+        <div class="statrow" id="d1-stats"></div>
+        <p class="sub" id="d1-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">你應該看到什麼</span>
+    <p>
+      把最右邊的點往右拖，<strong>橘線（平均數）會跟著跑</strong>，
+      但<strong>藍虛線（中位數）幾乎釘在原地</strong>。<br>
+      因為平均數用到了每一筆資料，一筆極端值就能把它拉走；
+      中位數只看「排在中間的是誰」，最右邊那筆再怎麼極端，也只是「最右邊那一筆」而已。<br>
+      這個性質叫做<em>穩健（robust）</em>。
+    </p>
+  </div>
+
+  <div class="cmp">
+    <div>
+      <h5>什麼時候用平均數</h5>
+      <ul>
+        <li>資料大致<b>對稱</b>、無明顯離群值</li>
+        <li>用到每一筆資料，效率最高</li>
+        <li>下學期的 t 檢定、ANOVA 都建立在它上面</li>
+      </ul>
+    </div>
+    <div>
+      <h5>什麼時候用中位數</h5>
+      <ul>
+        <li>資料<b>偏斜</b>或有<b>離群值</b></li>
+        <li>更能反映「一般個體」的實況</li>
+        <li>所得、房價、漁獲重量都用它</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>分布形狀與三量數的相對位置</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>分布形狀</th><th>三量數的關係</th><th>為什麼</th></tr></thead>
+      <tbody>
+        <tr><td>對稱</td><td class="num">眾數 = 中位數 = 平均數</td><td>左右鏡像，三者重合</td></tr>
+        <tr><td>右偏（正偏）</td><td class="num">眾數 &lt; 中位數 &lt; <em>平均數</em></td><td>右邊少數極大值把平均數往右拉</td></tr>
+        <tr><td>左偏（負偏）</td><td class="num"><em>平均數</em> &lt; 中位數 &lt; 眾數</td><td>左邊少數極小值把平均數往左拉</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="lbl">記憶法</span>
+    <p><strong>平均數永遠被尾巴拉走。</strong>尾巴在右（右偏）→ 平均數被拉到最右；尾巴在左 → 平均數被拉到最左。</p>
+  </div>
+</section>
+
+<!-- ══════════ 02 ══════════ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span>
+    <h2>標準差在量什麼</h2>
+  </div>
+  <p class="sub">
+    兩個養殖池的平均體重差不多，但一個整整齊齊、一個大小差很多。
+    只講平均數，你完全看不出這件事——而它直接決定了能不能整池同一規格出貨。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 02</span>
+      <span class="name">離差的幾何意義</span>
+      <span class="hint">每一條線就是一個「離差」</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:14px">
+          <button data-sd="A" class="on">甲池（整齊）</button>
+          <button data-sd="B">乙池（不整齊）</button>
+          <button data-sd="H">含離群值的池</button>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="devchart" viewBox="0 0 660 230" role="img" aria-label="離差圖"></svg></div>
+        <p class="drag-hint">
+          灰虛線＝平均數。每一條垂直線就是該筆資料的<b>離差 (x − x̄)</b>，
+          標準差就是把這些線「平方、平均、再開根號」得到的。
+        </p>
+
+        <div class="statrow" id="d2-stats"></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>為什麼要繞這麼多路</h3>
+  <div class="steps">
+    <div class="step"><div class="step-n">想法 1</div><div class="step-b">
+      <h5>全距 R = 最大 − 最小</h5>
+      <p>最簡單，但只用到<strong>兩筆</strong>資料，中間全部沒用到，而且極度受離群值影響。</p>
+    </div></div>
+    <div class="step"><div class="step-n">想法 2</div><div class="step-b">
+      <h5>把每一筆的離差加起來</h5>
+      <div class="eq">Σ(x − x̄) 永遠等於 <b>0</b>　→　行不通（正負相消）</div>
+    </div></div>
+    <div class="step"><div class="step-n">想法 3</div><div class="step-b">
+      <h5>先平方再加總，消除正負號</h5>
+      <div class="eq">Σ(x − x̄)² 稱為「離差平方和」，再除以自由度就是變異數</div>
+    </div></div>
+    <div class="step"><div class="step-n">想法 4</div><div class="step-b">
+      <h5>變異數的單位是平方，開根號還原</h5>
+      <div class="eq">s = √s²　→　單位與原始資料相同，才能說「平均偏離 3.05 cm」</div>
+    </div></div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">最常被扣分的地方</span>
+    <p><strong>樣本</strong>變異數的分母是 <em>n − 1</em>，不是 n。<br>
+    因為 x̄ 本身就是從這批資料算出來的，資料會自然而然比較靠近它，
+    直接除以 n 會系統性低估母體變異。除以 n − 1 把這個低估修正回來（不偏估計）。<br>
+    <strong>口訣：看到「樣本」就用 n − 1。</strong></p>
+  </div>
+
+  <h3>比較整齊度必須用變異係數</h3>
+  <div class="eq">CV = (s / x̄) × 100%　　無單位，可以跨變數、跨物種比較</div>
+  <p class="sub">
+    標準差<strong>帶單位</strong>，而且<strong>會隨平均水準放大</strong>。
+    體長 s = 3 cm 與體重 s = 30 g 根本不能比；
+    鯨魚的體長標準差當然比蝦子大，但不代表鯨魚比較不整齊。
+  </p>
+</section>
+
+<!-- ══════════ 03 ══════════ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span>
+    <h2>經驗法則：用你自己的資料驗證</h2>
+  </div>
+  <p class="sub">
+    課本說近似鐘形的資料，約 68% 落在 x̄ ± 1s、95% 落在 ± 2s、99.7% 落在 ± 3s。
+    別背——<strong>拿資料數數看</strong>。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 03</span>
+      <span class="name">經驗法則實測</span>
+      <span class="hint">切換區間，看實際落入幾筆</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="btns">
+            <button data-band="1" class="on">x̄ ± 1s</button>
+            <button data-band="2">x̄ ± 2s</button>
+            <button data-band="3">x̄ ± 3s</button>
+          </div>
+          <div class="btns">
+            <button data-emp="A40" class="on">吳郭魚體長 40 尾</button>
+            <button data-emp="E50">虱目魚體重 50 尾</button>
+          </div>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="empchart" viewBox="0 0 660 210" role="img" aria-label="經驗法則帶狀圖"></svg></div>
+
+        <div class="statrow" id="d3-stats"></div>
+        <p class="sub" id="d3-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div>
+      <h5>經驗法則 Empirical Rule</h5>
+      <ul>
+        <li>只適用<b>鐘形（近似常態）</b>分布</li>
+        <li>給的是<b>大約值</b>：68 / 95 / 99.7</li>
+        <li>精確度高</li>
+      </ul>
+    </div>
+    <div>
+      <h5>柴比雪夫定理 Chebyshev</h5>
+      <ul>
+        <li><b>任何形狀</b>的分布都適用</li>
+        <li>給的是<b>下限</b>：至少 1 − 1/k²</li>
+        <li>k=2 至少 75%；k=3 至少 88.9%</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 04 ══════════ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span>
+    <h2>箱型圖產生器</h2>
+  </div>
+  <p class="sub">
+    只要<strong>五個數字</strong>就能畫出箱型圖：最小值、Q1、中位數、Q3、最大值。
+    貼上你自己的資料試試看——它會自動算出柵欄並把離群值標出來。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 04</span>
+      <span class="name">五數綜合與離群值</span>
+      <span class="hint">可直接貼上自己的資料</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:12px">
+          <button data-bp="H" class="on">第 3 池（含 412）</button>
+          <button data-bp="K">第 4 池（含 196）</button>
+          <button data-bp="A40">吳郭魚 40 尾</button>
+          <button data-bp="AB">甲池 vs 乙池</button>
+        </div>
+
+        <label for="bpdata" style="font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);display:block;margin-bottom:6px">資料（用空白、逗號或換行分隔；多組資料用分號分開）</label>
+        <textarea class="data" id="bpdata" spellcheck="false"></textarea>
+        <p class="data-err" id="bperr"></p>
+
+        <div class="chart-wrap"><svg class="chart" id="boxplot" viewBox="0 0 660 230" role="img" aria-label="箱型圖"></svg></div>
+        <div class="bp-legend">
+          <span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>箱子＝Q1 到 Q3（中間 50%）</span>
+          <span><i style="background:var(--flag)"></i>中位數</span>
+          <span><i style="background:transparent;border:2px solid var(--flag);border-radius:50%"></i>離群值</span>
+        </div>
+
+        <div class="five" id="bpfive"></div>
+        <div class="statrow" id="d4-stats"></div>
+        <p class="sub" id="bpnote" style="margin:6px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <h3>兩種判定離群值的方法</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>方法</th><th>怎麼算</th><th>優缺點</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>IQR 柵欄法</strong></td>
+          <td class="num">Q1 − 1.5×IQR　／　Q3 + 1.5×IQR</td>
+          <td>只用四分位數，<em>不受離群值影響</em>，通常更可靠</td>
+        </tr>
+        <tr>
+          <td><strong>z 分數法</strong></td>
+          <td class="num">|z| &gt; 3</td>
+          <td>用到 x̄ 與 s，而這兩者<em>本身就被離群值汙染了</em>，|z| 會被低估</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">找到離群值之後不可以直接刪掉</span>
+    <p>
+      ① <strong>記錄或輸入錯誤</strong> → 查原始紀錄，更正或刪除，並註明<br>
+      ② <strong>真實但特殊的個體</strong>（病魚、混入他種）→ 保留，但在報告中單獨說明<br>
+      ③ <strong>真實且正常</strong>，只是這批資料變異本來就大 → 必須保留<br>
+      <em>未經查證就刪除離群值，在學術與實務上都不能接受</em>——這種行為叫做「資料整形」。
+    </p>
+  </div>
+</section>
+
+<!-- ══════════ 05 ══════════ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span>
+    <h2>無限練習題</h2>
+  </div>
+  <p class="sub">
+    每按一次「換一題」就是一組新數字。先自己在紙上算完，再按「顯示計算步驟」對答案。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 01</span><span class="name">四種集中趨勢量數</span><span class="hint">平均數・中位數・眾數・中列數</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g1-q"></p>
+      <div class="btns"><button class="primary" data-gen="1">↻ 換一題</button><button data-sol="1">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g1-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 02</span><span class="name">加權平均數</span><span class="hint">認出權重是什麼</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g2-q"></p>
+      <div class="btns"><button class="primary" data-gen="2">↻ 換一題</button><button data-sol="2">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g2-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 03</span><span class="name">變異數與標準差</span><span class="hint">計算公式法＋變異係數</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g3-q"></p>
+      <div class="btns"><button class="primary" data-gen="3">↻ 換一題</button><button data-sol="3">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g3-s"></div>
+    </div></div>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><span class="tag">練習機 04</span><span class="name">四分位數與離群值</span><span class="hint">含線性內插題型</span></div>
+    <div class="lab-body"><div class="lab-inner">
+      <p class="gen-q" id="g4-q"></p>
+      <div class="btns"><button class="primary" data-gen="4">↻ 換一題</button><button data-sol="4">顯示計算步驟</button></div>
+      <div class="gen-sol" id="g4-s"></div>
+      <p class="gen-tip">※ 位置 = (n+1)p。位置是整數就直接取該筆，不是整數才需要內插——每次都先確認。</p>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════ 06 ══════════ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span>
+    <h2>速記卡</h2>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>項目</th><th>公式</th><th>備註</th></tr></thead>
+      <tbody>
+        <tr><td>平均數</td><td class="num">x̄ = Σx / n</td><td>分組：ΣfXm / Σf</td></tr>
+        <tr><td>加權平均</td><td class="num">Σ(w × x) / Σw</td><td>各項重要性不同時</td></tr>
+        <tr><td>中列數</td><td class="num">(最大 + 最小) / 2</td><td>只看兩端，最不可靠</td></tr>
+        <tr><td>樣本變異數（定義式）</td><td class="num">s² = Σ(x − x̄)² / (n − 1)</td><td>分母 <em>n − 1</em></td></tr>
+        <tr><td>樣本變異數（計算式）</td><td class="num">s² = [Σx² − (Σx)²/n] / (n − 1)</td><td>考試用這個比較快</td></tr>
+        <tr><td>變異係數</td><td class="num">CV = (s / x̄) × 100%</td><td>無單位，可跨變數比</td></tr>
+        <tr><td>z 分數</td><td class="num">z = (x − x̄) / s</td><td>距離平均幾個標準差</td></tr>
+        <tr><td>四分位數位置</td><td class="num">第 (n+1)p 筆</td><td>非整數時線性內插</td></tr>
+        <tr><td>四分位距</td><td class="num">IQR = Q3 − Q1</td><td>中間 50% 的寬度</td></tr>
+        <tr><td>柵欄</td><td class="num">Q1 − 1.5×IQR　／　Q3 + 1.5×IQR</td><td>超出即為離群值</td></tr>
+        <tr><td>柴比雪夫</td><td class="num">至少 1 − 1/k²</td><td>任何分布皆適用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note key">
+    <span class="lbl">穩健 vs 不穩健（必考）</span>
+    <p>
+      <strong>穩健</strong>（不受離群值影響）：中位數、眾數、IQR、四分位數<br>
+      <strong>不穩健</strong>（會被拉走）：<em>平均數、標準差、變異數、全距、中列數</em>
+    </p>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">三個最容易錯的地方</span>
+    <p>
+      ① 樣本變異數分母是 <strong>n − 1</strong>，不是 n<br>
+      ② 比較整齊度要用 <strong>CV</strong>，不能直接比標準差<br>
+      ③ 經驗法則<strong>只適用鐘形分布</strong>；不是鐘形就要用柴比雪夫
+    </p>
+  </div>
+</section>
+
+</div><!-- /rail -->
+
+<footer>
+  <p>生物統計學(一)　單元三　互動教材　｜　對應 Bluman《統計學 10/e》第 3 章</p>
+  <p>配套講義：<code>講義/生統一/W07-W10_資料的描述.md</code>　｜　<a href="../" style="color:var(--accent)">回到課程主目錄</a></p>
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

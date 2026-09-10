@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# 打包腳本（產生 Artifact 單檔用，網站本身不需要）
+_build-artifact.py
