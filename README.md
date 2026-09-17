@@ -2,14 +2,14 @@
 
 國立高雄科技大學　漁業生產與管理系
 
-**線上網址：<https://hhchen514.github.io/biostat-1/>**
+**線上網址：<https://nkust-hhschen.github.io/biostat-1/>**
 
 | Lab | 週次 | 網址 |
 |---|---|---|
-| 課程主目錄 | — | <https://hhchen514.github.io/biostat-1/> |
-| Lab 01　資料的性質、收集與整理 | W1–W6 | <https://hhchen514.github.io/biostat-1/lab01-data-and-sampling/> |
-| Lab 02　資料的描述 | W7–W10 | <https://hhchen514.github.io/biostat-1/lab02-descriptive/> |
-| Lab 03　機率與機率分配 | W11–W15 | <https://hhchen514.github.io/biostat-1/lab03-probability/> |
+| 課程主目錄 | — | <https://nkust-hhschen.github.io/biostat-1/> |
+| Lab 01　資料的性質、收集與整理 | W1–W6 | <https://nkust-hhschen.github.io/biostat-1/lab01-data-and-sampling/> |
+| Lab 02　資料的描述 | W7–W10 | <https://nkust-hhschen.github.io/biostat-1/lab02-descriptive/> |
+| Lab 03　機率與機率分配 | W11–W15 | <https://nkust-hhschen.github.io/biostat-1/lab03-probability/> |
 
 ## 目錄結構
 
@@ -33,7 +33,7 @@ web/
 
 ## 部署到 GitHub Pages
 
-repo：`git@github.com:hhchen514/biostat-1.git`（分支 `main`，Pages 由 `main` / `(root)` 發布）
+repo：`git@github.com:nkust-hhschen/biostat-1.git`（分支 `main`，Pages 由 `main` / `(root)` 發布）
 
 ### 日常更新（改完教材要上線時）
 
@@ -49,7 +49,7 @@ git add -A && git commit -m "更新說明" && git push
 驗證是否真的上線：
 
 ```bash
-curl -s "https://hhchen514.github.io/biostat-1/lab03-probability/script.js?cb=$RANDOM" | grep -c ztTable
+curl -s "https://nkust-hhschen.github.io/biostat-1/lab03-probability/script.js?cb=$RANDOM" | grep -c ztTable
 ```
 
 回傳大於 0 就代表新版已經生效。
