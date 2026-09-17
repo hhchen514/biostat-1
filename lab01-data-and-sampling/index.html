@@ -315,6 +315,56 @@
     </table>
   </div>
 
+  <h3>簡單隨機抽樣實際上怎麼做：亂數表餘數法</h3>
+  <p>
+    考試常考、田野也真的用得到。關鍵只有一句：<strong>亂數除以 N，取餘數再加 1</strong>。
+    因為餘數只會是 0 ～ N−1 共 N 個值，加 1 之後剛好對上編號 1 ～ N。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">模擬 01b</span>
+      <span class="name">亂數表抽樣器</span>
+      <span class="hint">先決定起點，再看數字——順序不能反過來</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>母體大小 N<b id="v-rtN">18</b></label>
+            <input type="range" id="in-rtN" min="8" max="60" step="1" value="18">
+          </div>
+          <div class="ctrl">
+            <label>要抽幾個 n<b id="v-rtn">5</b></label>
+            <input type="range" id="in-rtn" min="2" max="10" step="1" value="5">
+          </div>
+          <div class="btns">
+            <button class="primary" id="rt-go">↻ 隨機起點，重抽</button>
+          </div>
+        </div>
+
+        <p class="sub" style="margin:4px 0 6px;font-size:13px">
+          下面是一張亂數表。反白的那一行就是這次的起點，由上往下逐一讀取四位數：
+        </p>
+        <div class="rtable" id="rt-tbl"></div>
+
+        <div class="tw" style="margin:14px 0 0"><table id="rt-steps"></table></div>
+        <p class="sub" id="rt-note" style="margin:8px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">兩個一定要注意的地方</span>
+    <p>
+      ① <strong>起點必須先決定再看數字</strong>。先掃過一遍再挑順眼的位置，就不是隨機了。<br>
+      ② <strong>重複的編號直接跳過</strong>——這叫不投返抽樣（without replacement），實務上最常用。<br>
+      ③ 嚴謹一點說：0000～9999 共 10000 個亂數，若 N 不能整除 10000，餘數的出現次數就會差一次。
+      例如 N = 18 時，10000 ÷ 18 = 555 餘 10，所以編號 1～10 的機率 5.56% 略高於 11～18 的 5.55%。
+      實務上可忽略；要完全均勻就把超出範圍的亂數直接捨棄。
+    </p>
+  </div>
+
   <h3>系統抽樣的計算</h3>
   <div class="steps">
     <div class="step"><div class="step-n">STEP 1</div><div class="step-b">
@@ -438,6 +488,11 @@
 
         <div class="chart-wrap"><svg class="chart" id="chart" viewBox="0 0 640 300" role="img" aria-label="次數分配圖"></svg></div>
         <p class="sub" id="chart-note" style="margin:6px 0 0;font-size:13.5px"></p>
+
+        <p class="sub" style="margin:12px 0 4px;font-size:13.5px">
+          <b>考試要寫出來的就是這一串點。</b>切換上面三顆按鈕，看座標怎麼跟著換：
+        </p>
+        <div class="ptlist" id="pt-list"></div>
       </div>
 
       <div class="lab-inner" style="margin-top:18px">
@@ -1037,6 +1092,87 @@ var STEPS = [
     '<br>完整表格請見下方「次數分配表建構器」（把組距設為 2.0、下組限設為 11.0 即為本例）。'}
 ];
 var stepsEl = document.getElementById("steps7");
+/* ══════════════ 03b 亂數表餘數法 ══════════════ */
+/* 固定種子產生一張「印好的」亂數表，重新整理頁面也一樣，方便課堂上對答案 */
+var RT_ROWS = 12, RT_COLS = 8;
+var RT = (function(){
+  var rng = mkRng(19510614), t = [];
+  for (var r = 0; r < RT_ROWS; r++){
+    var row = [];
+    for (var c = 0; c < RT_COLS; c++) row.push(Math.floor(rng()*10000));
+    t.push(row);
+  }
+  return t;
+})();
+var rtCol = 2;
+
+function rtRun(){
+  var N = +document.getElementById("in-rtN").value;
+  var n = +document.getElementById("in-rtn").value;
+  document.getElementById("v-rtN").textContent = N;
+  document.getElementById("v-rtn").textContent = n;
+  if (n > N) { n = N; document.getElementById("in-rtn").value = n;
+               document.getElementById("v-rtn").textContent = n; }
+
+  /* 由起點那一行，由上往下逐一讀四位數 */
+  var picked = [], steps = [], used = {};
+  for (var r = 0; r < RT_ROWS && picked.length < n; r++){
+    var num = RT[r][rtCol];
+    var q = Math.floor(num / N), rem = num % N, id = rem + 1;
+    var dup = picked.indexOf(id) >= 0;
+    steps.push({ r:r, num:num, q:q, rem:rem, id:id, dup:dup });
+    used[r] = dup ? "skip" : "used";
+    if (!dup) picked.push(id);
+  }
+
+  /* 亂數表：標出起點那一行，以及實際用到／跳過的格子 */
+  var h = "<table><tbody>";
+  for (var i = 0; i < RT_ROWS; i++){
+    h += "<tr>";
+    for (var j = 0; j < RT_COLS; j++){
+      var cls = j === rtCol ? (used[i] || "col") : "";
+      h += '<td class="' + cls + '">' + String(RT[i][j]).padStart(4, "0") + "</td>";
+    }
+    h += "</tr>";
+  }
+  document.getElementById("rt-tbl").innerHTML = h + "</tbody></table>";
+
+  /* 逐列換算 */
+  var st = '<thead><tr><th>序</th><th class="num">亂數</th><th class="num">÷ ' + N +
+           '</th><th class="num">餘數</th><th>餘數 + 1</th></tr></thead><tbody>';
+  steps.forEach(function(s2, k){
+    st += '<tr' + (s2.dup ? ' style="opacity:.55"' : '') + '>' +
+          '<td>' + (k+1) + '</td>' +
+          '<td class="num">' + String(s2.num).padStart(4,"0") + '</td>' +
+          '<td class="num">' + s2.num + ' ÷ ' + N + ' = ' + s2.q + '</td>' +
+          '<td class="num">' + s2.rem + '</td>' +
+          '<td>' + (s2.dup ? '第 ' + s2.id + ' 號（重複，跳過）' : '<b>第 ' + s2.id + ' 號</b>') + '</td>' +
+          '</tr>';
+  });
+  document.getElementById("rt-steps").innerHTML = st + "</tbody>";
+
+  var skipped = steps.filter(function(x){ return x.dup; }).length;
+  var extra = skipped ? "途中遇到 <strong>" + skipped + "</strong> 個重複編號，直接跳過。" : "這次沒有遇到重複。";
+  var q10000 = Math.floor(10000 / N), r10000 = 10000 % N;
+  var uniform = r10000 === 0
+    ? "N = " + N + " 剛好整除 10000，每個編號的機率完全相等。"
+    : "10000 ÷ " + N + " = " + q10000 + " 餘 " + r10000 + "，所以編號 1～" + r10000 +
+      " 出現 " + (q10000+1) + " 次、其餘出現 " + q10000 + " 次，機率略有差異（可忽略）。";
+
+  document.getElementById("rt-note").innerHTML =
+    "抽出結果：<strong>第 " + picked.slice().sort(function(a,b){return a-b;}).join("、") +
+    " 號</strong>（共 " + picked.length + " 個）。" + extra +
+    "<br>嚴謹度：" + uniform;
+}
+document.getElementById("rt-go").addEventListener("click", function(){
+  rtCol = Math.floor(Math.random() * RT_COLS);   /* 起點先決定，再看數字 */
+  rtRun();
+});
+["in-rtN","in-rtn"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", rtRun);
+});
+rtRun();
+
 var shown = 0;
 function renderSteps(){
   stepsEl.innerHTML = "";
@@ -1168,7 +1304,49 @@ function renderChart(cls){
     s += '<text x="' + (ml+pw/2) + '" y="' + (H-8) + '" text-anchor="middle">上組界（cm）　—　永遠單調遞增，中間最陡處就是資料最集中的地方</text>';
   }
   svg.innerHTML = s;
+  renderPoints(cls);
 }
+
+/* 把圖上的點用「考卷上該寫的樣子」列出來。
+   三種圖的橫軸座標完全不同，這是學生最常寫錯的地方：
+   直方圖用組界、次數多邊圖用組中點、肩形圖用上組界。 */
+function renderPoints(cls){
+  var box = document.getElementById("pt-list");
+  if (!box) return;
+  var w = cls.length > 1 ? (cls[1].mid - cls[0].mid) : 2;
+  var pts = [], head = "", tip = "";
+
+  if (chartMode === "hist"){
+    head = "每根長條的左右邊界與高度";
+    cls.forEach(function(c){
+      pts.push({ k: c.bl.toFixed(2) + " ～ " + c.bu.toFixed(2), v: c.f, hl: false });
+    });
+    tip = "橫軸用<b>真實組界</b>（比組限多／少 0.05），長條才會緊鄰不留空隙。";
+  } else if (chartMode === "poly"){
+    head = "次數多邊圖：橫軸用組中點";
+    pts.push({ k: "(" + (cls[0].mid - w).toFixed(2) + ", 0)", v: "補", hl: true });
+    cls.forEach(function(c){
+      pts.push({ k: "(" + c.mid.toFixed(2) + ", " + c.f + ")", v: c.f, hl: false });
+    });
+    pts.push({ k: "(" + (cls[cls.length-1].mid + w).toFixed(2) + ", 0)", v: "補", hl: true });
+    tip = "橘色那兩點是<b>兩端補的 0</b>，把折線拉回橫軸。沒補就是懸空的折線，會扣分。";
+  } else {
+    head = "肩形圖：橫軸用真實上組界";
+    pts.push({ k: "(" + cls[0].bl.toFixed(2) + ", 0)", v: "起點", hl: true });
+    cls.forEach(function(c){
+      pts.push({ k: "(" + c.bu.toFixed(2) + ", " + c.cf + ")", v: c.cf, hl: false });
+    });
+    tip = "橘色那點是<b>第一組的真實下組界、累積次數 0</b>——起點不是組中點。縱軸是<b>累積</b>次數，只升不降。";
+  }
+
+  var h = '<div class="pt-head">' + head + '</div><div class="pt-row">';
+  pts.forEach(function(p){
+    h += '<code class="' + (p.hl ? "hl" : "") + '">' + p.k + '</code>';
+  });
+  h += '</div><p class="pt-tip">' + tip + '</p>';
+  box.innerHTML = h;
+}
+
 var CHART_NOTE = {
   hist:"橫軸是<strong>組界</strong>、縱軸是次數。長條緊鄰不留空隙——因為體長是連續的，16.9 和 17.0 之間並沒有斷掉。反白列是次數最多的組。",
   poly:"橫軸是<strong>組中點</strong>。兩端各補一組次數為 0 的組中點，把折線拉回橫軸——「多邊形」必須是封閉的。優點是<strong>可以把兩年、兩池的分布疊在同一張圖上比較</strong>，直方圖辦不到。",

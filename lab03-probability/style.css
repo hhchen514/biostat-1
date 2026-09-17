@@ -92,3 +92,19 @@ svg.chart .normfit{fill:none;stroke:var(--flag);stroke-width:2;stroke-dasharray:
 .binom-tbl th{background:var(--surface-2);color:var(--ink-2);font-size:11px}
 .binom-tbl td:first-child,.binom-tbl th:first-child{text-align:left}
 .binom-tbl tr.peak td{background:var(--flag-soft);font-weight:700;color:var(--flag)}
+
+/* ─── Z 表查表練習 ───────────────────────────────── */
+.ztable{overflow-x:auto;margin:8px 0}
+.ztable table{
+  border-collapse:collapse;min-width:540px;
+  font-family:var(--f-mono);font-size:11.5px;font-variant-numeric:tabular-nums;
+}
+.ztable th,.ztable td{
+  border:1px solid var(--rule);padding:4px 7px;text-align:right;
+  color:var(--ink-2);white-space:nowrap;
+}
+.ztable th{background:var(--surface-2);font-weight:600}
+.ztable th.axis{background:var(--accent-soft);color:var(--accent);font-weight:700;text-align:center}
+.ztable th.axis.on,.ztable th.col.on{background:var(--accent);color:#fff}
+.ztable td.hit{background:var(--flag);color:#fff;font-weight:700}
+.ztable td.band{background:var(--flag-soft)}

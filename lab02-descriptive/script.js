@@ -36,6 +36,15 @@ function sd(a){
   return Math.sqrt(a.reduce(function(s,x){ return s + (x-m)*(x-m); }, 0) / (a.length-1));
 }
 /* 位置 = (n+1)p，非整數時線性內插 */
+/* 10% 截尾平均數：排序後去掉頭尾各 10%，再平均。
+   截尾比例必須事先訂好，不能看到答案不喜歡才決定要截掉哪一筆。 */
+function trimmedMean(a, frac){
+  var k = Math.floor(a.length * frac);
+  if (k === 0) return null;                 /* n 太小，截不動 */
+  var s2 = a.slice().sort(function(x,y){ return x-y; });
+  return { v: mean(s2.slice(k, s2.length-k)), k: k };
+}
+
 function quantile(a, p){
   var s = a.slice().sort(function(x,y){return x-y;}), n = s.length;
   var pos = (n+1)*p;
@@ -121,7 +130,13 @@ function statsLine(){
     '<div class="s"><span class="k">中位數</span><span class="v acc">'+fmt(md,1)+'</span>'+delta(dmd)+'</div>' +
     '<div class="s"><span class="k">眾數</span><span class="v">'+(mo.n ? mo.list.map(function(v){return fmt(v,1);}).join(", ") : "無")+'</span></div>' +
     '<div class="s"><span class="k">中列數</span><span class="v">'+fmt(mr,1)+'</span></div>' +
-    '<div class="s"><span class="k">標準差 s</span><span class="v flag">'+fmt(sd(pts),2)+'</span></div>';
+    '<div class="s"><span class="k">標準差 s</span><span class="v flag">'+fmt(sd(pts),2)+'</span></div>' +
+    (function(){
+      var t = trimmedMean(pts, 0.10), ot = trimmedMean(orig, 0.10);
+      if (!t) return '<div class="s"><span class="k">10% 截尾平均</span><span class="v">—</span><span class="d">n 太小</span></div>';
+      return '<div class="s"><span class="k">10% 截尾平均</span><span class="v acc">'+fmt(t.v,1)+'</span>' +
+             delta(t.v - ot.v) + '</div>';
+    })();
 
   var note = document.getElementById("d1-note");
   if (Math.abs(dm) > 0.05 || Math.abs(dmd) > 0.05){
@@ -135,7 +150,8 @@ function statsLine(){
         "平均數的移動量是中位數的 <strong>" + Math.abs(dm/dmd).toFixed(1) + " 倍</strong>。";
     }
   } else {
-    note.innerHTML = "拖動任何一個點看看。特別建議把<strong>最右邊那個</strong>往右拉到底。";
+    note.innerHTML = "拖動任何一個點看看。特別建議把<strong>最右邊那個</strong>往右拉到底，" +
+      "然後同時盯著<strong>平均數</strong>、<strong>中位數</strong>與<strong>10% 截尾平均</strong>三個數字。";
   }
 }
 
@@ -606,6 +622,181 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-sol]"), function(b
     b.textContent = el.classList.toggle("show") ? "隱藏計算步驟" : "顯示計算步驟";
   });
 });
+/* ══════════════ 01b 幾何平均數 ══════════════ */
+/* 等比資料取對數之後才變成等距，這時候平均才有意義。
+   幾何平均 = 10^(log 的算術平均)，等價於 n 次方根連乘。 */
+var GM_SET = {
+  dilute: "16 8 4 2 1",
+  growth: "1200 2500 5100 9800 21000",
+  even:   "10 20 30 40 50"
+};
+
+function gmParse(txt){
+  var a = txt.split(/[\s,，]+/).filter(function(x){ return x !== ""; }).map(Number);
+  if (!a.length || a.some(function(x){ return !isFinite(x) || x <= 0; })) return null;
+  return a;
+}
+
+function gmDraw(){
+  var el = document.getElementById("gm-in");
+  var a = gmParse(el.value);
+  el.classList.toggle("bad", !a);
+  if (!a){
+    document.getElementById("gm-tbl").innerHTML = "";
+    document.getElementById("gm-stats").innerHTML = "";
+    document.getElementById("gm-note").innerHTML =
+      "請輸入<strong>至少一個正數</strong>。幾何平均數只對正數有定義——取對數的緣故。";
+    return;
+  }
+
+  var logs = a.map(function(x){ return Math.log10(x); });
+  var mLog = mean(logs), gm = Math.pow(10, mLog), am = mean(a);
+
+  var t = '<thead><tr><th class="num">x</th><th class="num">log₁₀ x</th><th class="num">與前一筆的差</th><th class="num">log 的差</th></tr></thead><tbody>';
+  a.forEach(function(x, i){
+    var dx  = i ? fmt(x - a[i-1], 2) : "—";
+    var dlg = i ? fmt(logs[i] - logs[i-1], 4) : "—";
+    t += '<tr><td class="num">'+fmt(x,2)+'</td><td class="num">'+fmt(logs[i],4)+'</td>' +
+         '<td class="num">'+dx+'</td><td class="num">'+dlg+'</td></tr>';
+  });
+  t += '<tr class="total"><td class="num">平均</td><td class="num">'+fmt(mLog,4)+'</td><td></td><td></td></tr></tbody>';
+  document.getElementById("gm-tbl").innerHTML = t;
+
+  document.getElementById("gm-stats").innerHTML =
+    '<div class="s"><span class="k">算術平均 AM</span><span class="v flag">'+fmt(am,2)+'</span></div>' +
+    '<div class="s"><span class="k">log 的平均</span><span class="v">'+fmt(mLog,4)+'</span></div>' +
+    '<div class="s"><span class="k">幾何平均 GM</span><span class="v acc">'+fmt(gm,2)+'</span><span class="d">10^'+fmt(mLog,4)+'</span></div>' +
+    '<div class="s"><span class="k">AM 比 GM 高</span><span class="v">'+fmt((am/gm-1)*100,1)+'%</span></div>';
+
+  /* log 的差是否幾乎固定？固定＝等比資料，該用 GM */
+  var dl = [], i;
+  for (i = 1; i < logs.length; i++) dl.push(logs[i] - logs[i-1]);
+  var spread = dl.length ? (Math.max.apply(null,dl) - Math.min.apply(null,dl)) : 0;
+  var geo = dl.length >= 2 && spread < 0.05;
+
+  document.getElementById("gm-note").innerHTML = a.length < 2
+    ? "至少輸入兩筆資料才看得出等比或等距。"
+    : (geo
+      ? "<strong>log 的差幾乎固定（相差 " + fmt(spread,4) + "）</strong>——這是<strong>等比資料</strong>。" +
+        "原始尺度上間隔愈來愈大、分布右偏；取對數後變成等距、對稱，這時候平均才合理。" +
+        "所以代表值應該用 <strong>GM = " + fmt(gm,2) + "</strong>，不是 AM = " + fmt(am,2) + "。"
+      : "log 的差<strong>不固定</strong>，這不是等比資料——用一般的算術平均就好。" +
+        "（AM 永遠 ≥ GM，只有所有數字都相等時才相等。）");
+}
+["input","change"].forEach(function(ev){
+  document.getElementById("gm-in").addEventListener(ev, gmDraw);
+});
+Array.prototype.forEach.call(document.querySelectorAll("[data-gm]"), function(b){
+  b.addEventListener("click", function(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-gm]"), function(x){ x.classList.remove("on"); });
+    b.classList.add("on");
+    document.getElementById("gm-in").value = GM_SET[b.dataset.gm];
+    gmDraw();
+  });
+});
+gmDraw();
+
+/* ══════════════ 02b 分組資料計算機 ══════════════ */
+/* 只剩次數分配表時的四個量數：
+   平均數用組中點、中位數用內插、全距用組界、標準差用編碼法（組距相等時）。 */
+var GD = {
+  fish: { name:"吳郭魚體長 40 尾", unit:"cm", dec:2,
+          lim:[[11.0,12.9],[13.0,14.9],[15.0,16.9],[17.0,18.9],[19.0,20.9],[21.0,22.9],[23.0,24.9]],
+          f:[2,6,10,10,7,3,2], real:0.05, raw:"原始 40 筆的平均 17.5、中位數 17.4" },
+  age:  { name:"疾病 A 發病年齡 50 人", unit:"歲", dec:1,
+          lim:[[35,40],[40,45],[45,50],[50,55],[55,60]],
+          f:[10,12,16,8,4], real:0, raw:"參考書原題答案：平均 45.9、標準差 6.0136" }
+};
+var gdCur = "fish";
+
+function gdCalc(g){
+  var k = g.f.length, n = g.f.reduce(function(a,b){ return a+b; }, 0);
+  var mid = g.lim.map(function(L){ return (L[0]+L[1])/2; });
+  var bl  = g.lim.map(function(L){ return L[0]-g.real; });      /* 真實下組界 */
+  var bu  = g.lim.map(function(L){ return L[1]+g.real; });      /* 真實上組界 */
+  var h   = bu[0]-bl[0];                                        /* 真實組距 */
+  var cf = [], run = 0;
+  g.f.forEach(function(fi){ run += fi; cf.push(run); });
+
+  /* 編碼法：A 取次數最多那組的組中點 */
+  /* A 取次數最多那組的組中點；並列時取其中一組即可，答案不受影響 */
+  var A = mid[g.f.indexOf(Math.max.apply(null, g.f))];
+  var d = mid.map(function(m){ return Math.round((m-A)/h); });
+  var Sfd = 0, Sfd2 = 0;
+  g.f.forEach(function(fi, i){ Sfd += fi*d[i]; Sfd2 += fi*d[i]*d[i]; });
+  var xbar = A + (Sfd/n)*h;
+  var sVar = (Sfd2 - Sfd*Sfd/n) / (n-1);
+  var sd2  = h * Math.sqrt(sVar);
+
+  /* 中位數內插 */
+  var half = n/2, mi = 0;
+  while (mi < k-1 && cf[mi] < half) mi++;
+  var C = mi === 0 ? 0 : cf[mi-1];
+  var me = bl[mi] + (half - C)/g.f[mi] * h;
+
+  /* 眾數組可能不只一組——次數並列時要全部列出，不能默默取第一個 */
+  var fmax = Math.max.apply(null, g.f), modal = [];
+  g.f.forEach(function(fi, i){ if (fi === fmax) modal.push(i); });
+
+  return { n:n, k:k, mid:mid, bl:bl, bu:bu, h:h, cf:cf, A:A, d:d,
+           Sfd:Sfd, Sfd2:Sfd2, xbar:xbar, sd:sd2, me:me, mi:mi, C:C,
+           R: bu[k-1] - bl[0], modal: modal };
+}
+
+function gdDraw(){
+  var g = GD[gdCur], c = gdCalc(g), D = g.dec;
+
+  var t = '<thead><tr><th>組限</th><th class="num">真實組界</th><th class="num">組中點 x</th>' +
+          '<th class="num">次數 f</th><th class="num">累積 cf</th>' +
+          '<th class="num">d = (x−A)/h</th><th class="num">f·d</th><th class="num">f·d²</th></tr></thead><tbody>';
+  g.lim.forEach(function(L, i){
+    var hl = (c.modal.indexOf(i) >= 0 || i === c.mi) ? ' class="hi"' : '';
+    t += '<tr'+hl+'><td>'+L[0].toFixed(D>1?1:0)+' – '+L[1].toFixed(D>1?1:0)+'</td>' +
+         '<td class="num">'+c.bl[i].toFixed(2)+' – '+c.bu[i].toFixed(2)+'</td>' +
+         '<td class="num">'+c.mid[i].toFixed(2)+'</td>' +
+         '<td class="num">'+g.f[i]+'</td><td class="num">'+c.cf[i]+'</td>' +
+         '<td class="num">'+c.d[i]+'</td><td class="num">'+(g.f[i]*c.d[i])+'</td>' +
+         '<td class="num">'+(g.f[i]*c.d[i]*c.d[i])+'</td></tr>';
+  });
+  t += '<tr class="total"><td>合計</td><td></td><td></td><td class="num">'+c.n+'</td>' +
+       '<td></td><td></td><td class="num">'+c.Sfd+'</td><td class="num">'+c.Sfd2+'</td></tr></tbody>';
+  document.getElementById("gd-tbl").innerHTML = t;
+
+  document.getElementById("gd-stats").innerHTML =
+    '<div class="s"><span class="k">分組平均 x̄</span><span class="v flag">'+fmt(c.xbar,2)+'</span><span class="d">'+g.unit+'</span></div>' +
+    '<div class="s"><span class="k">分組中位數</span><span class="v acc">'+fmt(c.me,2)+'</span><span class="d">內插</span></div>' +
+    '<div class="s"><span class="k">分組標準差 s</span><span class="v flag">'+fmt(c.sd,4)+'</span><span class="d">編碼法</span></div>' +
+    '<div class="s"><span class="k">分組全距 R</span><span class="v">'+fmt(c.R,2)+'</span><span class="d">上界 − 下界</span></div>' +
+    '<div class="s"><span class="k">眾數組</span><span class="v">第 '+c.modal.map(function(i){return i+1;}).join("、")+' 組</span>' +
+      '<span class="d">' + (c.modal.length > 1
+        ? "次數並列，兩組都是眾數組"
+        : "組中點 " + fmt(c.mid[c.modal[0]],2)) + '</span></div>';
+
+  var st = [
+    { n:"編碼", h:"取 A = 次數最多那組的組中點，h = 組距",
+      b:'<div class="eq">A = <b>'+fmt(c.A,2)+'</b>　h = <b>'+fmt(c.h,2)+'</b>　d = (x − A) / h</div>' },
+    { n:"平均數", h:"x̄ = A + (Σfd / n) × h",
+      b:'<div class="eq">'+fmt(c.A,2)+' + ('+c.Sfd+' / '+c.n+') × '+fmt(c.h,2)+' = <b>'+fmt(c.xbar,2)+' '+g.unit+'</b></div>' },
+    { n:"標準差", h:"s = h × √[ (Σfd² − (Σfd)²/n) / (n−1) ]",
+      b:'<div class="eq">'+fmt(c.h,2)+' × √[ ('+c.Sfd2+' − '+c.Sfd+'²/'+c.n+') / '+(c.n-1)+' ] = <b>'+fmt(c.sd,4)+' '+g.unit+'</b></div>' },
+    { n:"中位數", h:"n/2 = "+fmt(c.n/2,1)+" 落在第 "+(c.mi+1)+" 組，代入內插公式",
+      b:'<div class="eq">Me = L + (n/2 − C)/f × h = '+fmt(c.bl[c.mi],2)+' + ('+fmt(c.n/2,1)+' − '+c.C+') / '+g.f[c.mi]+' × '+fmt(c.h,2)+' = <b>'+fmt(c.me,2)+' '+g.unit+'</b></div>' },
+    { n:"全距", h:"分組後看不到真正的最大／最小值",
+      b:'<div class="eq">R = 最大組上界 − 最小組下界 = '+fmt(c.bu[c.k-1],2)+' − '+fmt(c.bl[0],2)+' = <b>'+fmt(c.R,2)+' '+g.unit+'</b></div>' +
+        '<p>' + g.raw + '——編碼法只是把數字縮小，<strong>不會改變答案</strong>。</p>' }
+  ];
+  document.getElementById("gd-steps").innerHTML = st.map(function(x){
+    return '<div class="step"><div class="step-n">'+x.n+'</div><div class="step-b"><h5>'+x.h+'</h5>'+x.b+'</div></div>';
+  }).join("");
+}
+Array.prototype.forEach.call(document.querySelectorAll("[data-gd]"), function(b){
+  b.addEventListener("click", function(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-gd]"), function(x){ x.classList.remove("on"); });
+    b.classList.add("on"); gdCur = b.dataset.gd; gdDraw();
+  });
+});
+gdDraw();
+
 GEN[1](); GEN[2](); GEN[3](); GEN[4]();
 
 })();

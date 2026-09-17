@@ -314,6 +314,132 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-nm]"), function(b)
 });
 normDraw();
 
+/* ══════════════ 04b Z 表格式轉換器 ══════════════ */
+/* 兩種 Z 表的差別只在「從哪裡開始算面積」：
+   累積面積表從 −∞ 算起，中間面積表從 0 算起，兩者永遠差 0.5。 */
+var ztMode = "cum";
+/* toFixed 會給 ASCII 連字號，換成排版用的減號，與頁面其他數字一致 */
+function fz(x, d){ return fmt(x, d).replace("-", "\u2212"); }
+
+function ztValue(z){ return ztMode === "cum" ? Phi(z) : Phi(Math.abs(z)) - 0.5; }
+
+function ztCurve(z){
+  var W = 660, H = 200, ml = 40, mr = 24, mt = 18, mb = 34;
+  var pw = W-ml-mr, ph = H-mt-mb, lo = -3.8, hi = 3.8, N = 160;
+  function X(v){ return ml + (v-lo)/(hi-lo)*pw; }
+  function pdf(v){ return Math.exp(-0.5*v*v); }
+  function Y(d){ return mt + ph - d*ph*0.92; }
+
+  /* 塗色範圍：累積表從左端塗到 z；中間表只塗 0 與 z 之間 */
+  var loS, hiS;
+  if (ztMode === "cum"){ loS = lo; hiS = z; }
+  else { loS = Math.min(0, z); hiS = Math.max(0, z); }
+
+  var d = "M " + X(loS).toFixed(1) + " " + (mt+ph);
+  for (var j = 0; j <= N; j++){
+    var v = loS + (hiS-loS)*j/N;
+    d += " L " + X(v).toFixed(1) + " " + Y(pdf(v)).toFixed(1);
+  }
+  d += " L " + X(hiS).toFixed(1) + " " + (mt+ph) + " Z";
+
+  var pts = [];
+  for (var i = 0; i <= N; i++){
+    var v2 = lo + (hi-lo)*i/N;
+    pts.push(X(v2).toFixed(1) + "," + Y(pdf(v2)).toFixed(1));
+  }
+
+  var out = '<path class="shade" d="'+d+'"/>';
+  out += '<polyline class="curve" points="'+pts.join(" ")+'"/>';
+  out += '<line class="meanline" x1="'+X(0).toFixed(1)+'" y1="'+mt+'" x2="'+X(0).toFixed(1)+'" y2="'+(mt+ph)+'"/>';
+  out += '<line class="vline" x1="'+X(z).toFixed(1)+'" y1="'+mt+'" x2="'+X(z).toFixed(1)+'" y2="'+(mt+ph)+'"/>';
+  out += '<text class="lbl" x="'+X(z).toFixed(1)+'" y="'+(mt-4)+'" text-anchor="middle" fill="var(--flag)">z = '+fz(z,2)+'</text>';
+  out += '<line class="axis" x1="'+ml+'" y1="'+(mt+ph)+'" x2="'+(W-mr)+'" y2="'+(mt+ph)+'"/>';
+  for (var k = -3; k <= 3; k++){
+    out += '<line class="grid" x1="'+X(k).toFixed(1)+'" y1="'+(mt+ph)+'" x2="'+X(k).toFixed(1)+'" y2="'+(mt+ph+5)+'"/>';
+    out += '<text x="'+X(k).toFixed(1)+'" y="'+(mt+ph+17)+'" text-anchor="middle">'+(k<0?"\u2212"+Math.abs(k):k)+'</text>';
+  }
+  return out;
+}
+
+function ztTable(z){
+  /* 中間面積表只印非負的 z，負值靠對稱性 */
+  var zt   = ztMode === "mid" ? Math.abs(z) : z;
+  var sign = zt < 0 ? -1 : 1;                    /* 正負分開處理，才印得出真實 Z 表的「−0.0」列 */
+  var mag  = Math.abs(zt);
+  var rowM = Math.floor(mag * 10 + 1e-9) / 10;   /* 小數第一位（取絕對值） */
+  var col  = Math.round((mag - rowM) * 100);
+  if (col > 9) col = 9;                          /* 浮點誤差保險 */
+
+  var rows = [];
+  for (var r = -2; r <= 2; r++){
+    var rm = Math.round((rowM + r * 0.1) * 10) / 10;
+    if (rm < 0 || rm > 3.4) continue;
+    rows.push(rm);
+  }
+
+  var h = '<table><thead><tr><th class="axis">z</th>';
+  for (var c = 0; c <= 9; c++){
+    h += '<th class="col' + (c === col ? " on" : "") + '">.0' + c + '</th>';
+  }
+  h += '</tr></thead><tbody>';
+
+  rows.forEach(function(rm){
+    var isRow = Math.abs(rm - rowM) < 1e-9;
+    var label = (sign < 0 ? "−" : "") + rm.toFixed(1);   /* sign<0 且 rm=0 → 「−0.0」，與真實 Z 表一致 */
+    h += '<tr><th class="axis' + (isRow ? " on" : "") + '">' + label + '</th>';
+    for (var c2 = 0; c2 <= 9; c2++){
+      var zz  = sign * (rm + c2 / 100);
+      var val = ztMode === "cum" ? Phi(zz) : Phi(Math.abs(zz)) - 0.5;
+      var cls = (isRow && c2 === col) ? "hit" : (isRow ? "band" : "");
+      h += '<td class="' + cls + '">' + fmt(val, 4) + '</td>';
+    }
+    h += '</tr>';
+  });
+  return h + '</tbody></table>';
+}
+
+function ztDraw(){
+  var z = +document.getElementById("in-zt").value;
+  document.getElementById("v-zt").textContent = fz(z,2);
+  document.getElementById("ztchart").innerHTML = ztCurve(z);
+  document.getElementById("zt-tbl").innerHTML = ztTable(z);
+
+  var mid = Phi(Math.abs(z)) - 0.5, cum = Phi(z), rt = 1 - Phi(z);
+  document.getElementById("zt-out").innerHTML =
+    '<div class="p'+(ztMode==="mid"?" hi":"")+'"><span class="n">中間面積　P(0 &lt; Z &lt; |z|)</span><span class="val">'+fmt(mid,4)+'</span></div>' +
+    '<div class="p'+(ztMode==="cum"?" hi":"")+'"><span class="n">累積面積　P(Z &lt; z)</span><span class="val">'+fmt(cum,4)+'</span></div>' +
+    '<div class="p"><span class="n">右尾　P(Z &gt; z)</span><span class="val">'+fmt(rt,4)+'</span></div>';
+
+  var rel = z >= 0
+    ? "Φ(" + fz(z,2) + ") = 0.5 + " + fmt(mid,4) + " = " + fmt(cum,4)
+    : "Φ(" + fz(z,2) + ") = 0.5 − " + fmt(mid,4) + " = " + fmt(cum,4) + "　（z 為負，中間面積要用減的）";
+
+  var extra = "";
+  if (ztMode === "mid" && z < 0){
+    extra = "<br>中間面積表<strong>沒有負的列</strong>：先查 |z| = " + fmt(Math.abs(z),2) +
+            " 得 " + fmt(mid,4) + "，再用對稱性換算。";
+  }
+  var near = Math.abs(Math.abs(z)-1.96) < 0.006 ? "　★ 這是雙尾 5% 的臨界值"
+           : Math.abs(Math.abs(z)-1.28) < 0.006 ? "　★ 這是尾端 10% 的臨界值" : "";
+  /* 1.645 在真實 Z 表上查不到——表只到小數第二位，它是 1.64 與 1.65 的內插 */
+  if (Math.abs(Math.abs(z)-1.645) < 0.006){
+    near = "　★ 這是單尾 5% 的臨界值。注意表上<strong>查不到 1.645</strong>：" +
+           "1.64 → 0.9495、1.65 → 0.9505，取兩者中間才得到 0.9500，所以臨界值寫成 1.645。";
+  }
+
+  document.getElementById("zt-note").innerHTML =
+    "<strong>" + rel + "</strong>" + near + extra +
+    "<br>同一個 z，兩張表給的數字差 <strong>0.5</strong>——差的就是平均數左邊那半塊面積。";
+}
+["in-zt"].forEach(function(id){ document.getElementById(id).addEventListener("input", ztDraw); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-zt]"), function(b){
+  b.addEventListener("click", function(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-zt]"), function(x){ x.classList.remove("on"); });
+    b.classList.add("on"); ztMode = b.dataset.zt; ztDraw();
+  });
+});
+ztDraw();
+
 /* ══════════════ 05 中央極限定理模擬器 ══════════════ */
 var POPS = {
   skew:    { name:"右偏母體",  gen:function(){ return 180 + Math.pow(Math.random(),2.6)*260; } },

@@ -303,6 +303,48 @@
     </div>
   </div>
 
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 04b</span>
+      <span class="name">Z 表格式轉換器</span>
+      <span class="hint">課本用累積面積表，很多參考書與考古題用中間面積表</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="ctrls">
+          <div class="ctrl">
+            <label>z 值<b id="v-zt">1.80</b></label>
+            <input type="range" id="in-zt" min="-3.49" max="3.49" step="0.01" value="1.80">
+          </div>
+          <div class="btns">
+            <button data-zt="cum" class="on">累積面積表　P(Z &lt; z)</button>
+            <button data-zt="mid">中間面積表　P(0 &lt; Z &lt; z)</button>
+          </div>
+        </div>
+
+        <div class="chart-wrap"><svg class="chart" id="ztchart" viewBox="0 0 660 200" role="img" aria-label="標準常態曲線與查表面積"></svg></div>
+
+        <div class="plist" id="zt-out"></div>
+
+        <p class="sub" style="margin:12px 0 4px;font-size:13.5px">
+          下面是真正的 Z 表長相。<b>列</b>找 z 的小數第一位，<b>欄</b>找第二位，交會的那一格就是答案。
+        </p>
+        <div class="ztable" id="zt-tbl"></div>
+        <p class="sub" id="zt-note" style="margin:8px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="lbl">拿到 Z 表，先看表頭</span>
+    <p>
+      表頭寫「<strong>0 到 z</strong>」是<strong>中間面積表</strong>，最大值到 0.5；
+      寫「<strong>z 以下</strong>」是<strong>累積面積表</strong>，最大值到 1.0。<br>
+      換算：<em>累積面積 = 0.5 + 中間面積</em>（z &gt; 0 時）。<br>
+      負值兩種表都靠對稱性：<em>P(Z &lt; −a) = P(Z &gt; a) = 1 − Φ(a)</em>。
+    </p>
+  </div>
+
   <div class="tw">
     <table>
       <thead><tr><th></th><th>正向題</th><th>反向題</th></tr></thead>

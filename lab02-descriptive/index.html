@@ -108,6 +108,36 @@
     </div>
   </div>
 
+  <h3>第五種平均：倍數型資料要用幾何平均數</h3>
+  <p class="sub">
+    微生物與血清研究的<strong>滴定濃度</strong>、細菌的倍增、複利成長——
+    這類資料是<strong>等比</strong>的，間隔愈來愈大，直接取算術平均會被大值主導。
+    正確作法是<strong>先取對數、平均、再取回來</strong>。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 01b</span>
+      <span class="name">算術平均 vs 幾何平均</span>
+      <span class="hint">自己輸入數字試試看</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:12px">
+          <button data-gm="dilute" class="on">稀釋濃度 16 8 4 2 1</button>
+          <button data-gm="growth">細菌倍增 5 天</button>
+          <button data-gm="even">等距資料（對照組）</button>
+        </div>
+        <label class="gm-label" for="gm-in">資料（用空白或逗號分隔，必須全為正數）</label>
+        <input type="text" id="gm-in" class="gm-input" value="16 8 4 2 1" spellcheck="false">
+
+        <div class="tw" style="margin:12px 0 0"><table id="gm-tbl"></table></div>
+        <div class="statrow" id="gm-stats"></div>
+        <p class="sub" id="gm-note" style="margin:4px 0 0;font-size:13.5px"></p>
+      </div>
+    </div>
+  </div>
+
   <h3>分布形狀與三量數的相對位置</h3>
   <div class="tw">
     <table>
@@ -186,6 +216,36 @@
     因為 x̄ 本身就是從這批資料算出來的，資料會自然而然比較靠近它，
     直接除以 n 會系統性低估母體變異。除以 n − 1 把這個低估修正回來（不偏估計）。<br>
     <strong>口訣：看到「樣本」就用 n − 1。</strong></p>
+  </div>
+
+  <h3>只拿得到次數分配表的時候：分組資料計算機</h3>
+  <p class="sub">
+    原始資料常常已經不見了，手上只剩一張整理過的表。
+    這時候平均數用<strong>組中點</strong>代表整組、中位數用<strong>內插</strong>、
+    全距只能用<strong>最大組上限 − 最小組下限</strong>。
+    組距相等時還可以用<strong>編碼法</strong>把數字縮小，手算會輕鬆很多。
+  </p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="tag">實驗 02b</span>
+      <span class="name">分組資料計算機</span>
+      <span class="hint">改次數看四個量數一起變</span>
+    </div>
+    <div class="lab-body">
+      <div class="lab-inner">
+        <div class="btns" style="margin-bottom:12px">
+          <button data-gd="fish" class="on">吳郭魚體長 40 尾</button>
+          <button data-gd="age">疾病 A 發病年齡 50 人</button>
+        </div>
+
+        <div class="tw" style="margin:0 0 12px"><table id="gd-tbl"></table></div>
+
+        <div class="statrow" id="gd-stats"></div>
+
+        <div class="steps" id="gd-steps"></div>
+      </div>
+    </div>
   </div>
 
   <h3>比較整齊度必須用變異係數</h3>
